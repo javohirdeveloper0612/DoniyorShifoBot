@@ -10,9 +10,18 @@ public class DoniyorShifoBotApplication {
         SpringApplication.run(DoniyorShifoBotApplication.class, args);
 
         // salomlar
-
-        //kjdsbflasknbdlkjsad
-        //ldblfaks sad
+        //mazigios
     }
 
+
+
+
+
+
+
+
+
+
+
+     ///KHSABDLHJBadlhBDLHB QWLDJB  QWIHDB  QL
 }
