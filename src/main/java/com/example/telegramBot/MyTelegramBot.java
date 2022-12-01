@@ -1,7 +1,7 @@
 package com.example.telegramBot;
 
 import com.example.config.BotConfig;
-import com.example.controller.AccountentController;
+import com.example.accountent.AccountentController;
 import com.example.admin.AdminController;
 import com.example.controller.NurseController;
 import com.example.mainController.MainController;

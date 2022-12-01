@@ -116,7 +116,6 @@ public class MainMenuController {
                         Button.row(Button.button(Constant.backToMenu)
                         )))));
     }
-
     public void totalAmountOutputs(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Umimiy usulidan Chiqimlar Menyusi ",
@@ -128,8 +127,6 @@ public class MainMenuController {
                         Button.row(Button.button(Constant.backToMenu)
                         )))));
     }
-
-
     public void qoldiqMenu(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Qoldiqlar Menyusi",
@@ -142,8 +139,6 @@ public class MainMenuController {
                                 Button.button(Constant.backToMenu)
                         )))));
     }
-
-
     public void naxqQoldilar(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Naxq usulidan Chiqimlar Menyusi ",
@@ -155,7 +150,6 @@ public class MainMenuController {
                         Button.row(Button.button(Constant.backToMenu)
                         )))));
     }
-
     public void plastikQoldilar(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Plastik usulidan Chiqimlar Menyusi ",
@@ -167,7 +161,6 @@ public class MainMenuController {
                         Button.row(Button.button(Constant.backToMenu)
                         )))));
     }
-
     public void totalResidualOutputs(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Umimiy usulidan Qoldiqlar Menyusi ",
@@ -179,8 +172,6 @@ public class MainMenuController {
                         Button.row(Button.button(Constant.backToMenu)
                         )))));
     }
-
-
     public void countSick(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Qavatni kiriting",
@@ -201,4 +192,8 @@ public class MainMenuController {
                         Button.row(Button.button(Constant.backToMenu))
                 ))));
     }
+
+
+
+
 }
