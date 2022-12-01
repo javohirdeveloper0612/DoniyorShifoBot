@@ -1,8 +1,9 @@
-package com.example.controller;
+package com.example.mainController;
 
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
+import com.example.telegramBot.MyTelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -11,49 +12,54 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class OutPutsController {
-
-    private List<TelegramUsers> usersList = new ArrayList<>();
-
-    @Autowired
-    private MainController mainController;
+public class InputsController {
 
     @Autowired
     private MainMenuController menuController;
 
+    @Autowired
+    private MyTelegramBot myTelegramBot;
+
+    @Autowired
+    private MainController mainController;
+
+    private List<TelegramUsers> usersList = new ArrayList<>();
+
 
     public void handle(Message message) {
 
+
         TelegramUsers users = mainController.saveUser(message.getChatId());
 
-        TelegramUsers outPuts = saveUser(message.getChatId());
+        TelegramUsers inPuts = saveUser(message.getChatId());
+
 
         String text = message.getText();
 
-        if (outPuts.getStep() == null) {
-            outPuts.setStep(Step.OUTPUTS);
+        if (inPuts.getStep() == null) {
+            inPuts.setStep(Step.INPUTS);
         }
 
-        if (outPuts.getStep().equals(Step.OUTPUTS)) {
+        if (inPuts.getStep().equals(Step.INPUTS)) {
+
 
             switch (text) {
                 case Constant.naxd -> {
                     //naxd
-                    menuController.naxdMenuChiqim(message);
-                    outPuts.setStep(Step.NAXD);
+                    menuController.naxdKirimMenu(message);
+                    inPuts.setStep(Step.NAXDIN);
                 }
 
                 case Constant.plastik -> {
                     //plastik
-                    menuController.plastikChiqimMenu(message);
-                    outPuts.setStep(Step.PLASTIK);
+                    menuController.plastikKirimMenu(message);
+                    inPuts.setStep(Step.PLASTIKIN);
                 }
 
                 case Constant.umumiyBlance -> {
                     //umumiy
-                    menuController.totalAmountOutputs(message);
-                    outPuts.setStep(Step.TOTALAMOUNTOUTPUTS);
-
+                    menuController.totalAmount(message);
+                    inPuts.setStep(Step.TOTALAMOUNTINPUTS);
                 }
 
 
@@ -65,7 +71,31 @@ public class OutPutsController {
 
         }
 
-        if (outPuts.getStep().equals(Step.PLASTIK)) {
+
+        if (inPuts.getStep().equals(Step.NAXDIN)) {
+            switch (text) {
+                case Constant.bugungi -> {
+                    // bugungilarni chiqramiz dataBaseda olinadi
+
+                }
+
+                case Constant.kun10 -> {
+                    //10 kunlikni hisoblab chiqarish
+                }
+
+                case Constant.kunBuyicha -> {
+                    // kiritilgan sana buyicha kirimlar
+                }
+
+                case Constant.backToMenu -> {
+
+                    menuController.inputsMenu(message);
+                    inPuts.setStep(Step.INPUTS);
+                }
+            }
+        }
+
+        if (inPuts.getStep().equals(Step.PLASTIKIN)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -81,14 +111,13 @@ public class OutPutsController {
 
                 case Constant.backToMenu -> {
 
-                    menuController.outPutsMenu(message);
-                    outPuts.setStep(Step.OUTPUTS);
+                    menuController.inputsMenu(message);
+                    inPuts.setStep(Step.INPUTS);
                 }
             }
-
-
         }
-        if (outPuts.getStep().equals(Step.NAXD)) {
+
+        if (inPuts.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -100,41 +129,17 @@ public class OutPutsController {
 
                 case Constant.kunBuyicha -> {
                     // kiritilgan sana buyicha kirimlar
+
+
                 }
 
                 case Constant.backToMenu -> {
 
-                    menuController.outPutsMenu(message);
-                    outPuts.setStep(Step.OUTPUTS);
+                    menuController.inputsMenu(message);
+                    inPuts.setStep(Step.INPUTS);
                 }
             }
         }
-
-
-        if (outPuts.getStep().equals(Step.TOTALAMOUNTOUTPUTS)) {
-            switch (text) {
-                case Constant.bugungi -> {
-                    // bugungilarni chiqramiz dataBaseda olinadi
-                }
-
-                case Constant.kun10 -> {
-                    //10 kunlikni hisoblab chiqarish
-                }
-
-                case Constant.kunBuyicha -> {
-                    // kiritilgan sana buyicha kirimlar
-                }
-
-                case Constant.backToMenu -> {
-
-                    menuController.outPutsMenu(message);
-                    outPuts.setStep(Step.OUTPUTS);
-                }
-            }
-
-        }
-
-
     }
 
 
@@ -154,4 +159,6 @@ public class OutPutsController {
 
         return users;
     }
+
+
 }

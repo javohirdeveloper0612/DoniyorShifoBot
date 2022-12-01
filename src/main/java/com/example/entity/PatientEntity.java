@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.enums.PatientStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,22 +12,24 @@ import java.time.ZoneId;
 @Setter
 
 @Entity
-@Table(name = "output")
-public class OutputEntity {
-
+@Table(name = "patient")
+public class PatientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    private Double card;
+    private String fullName;
 
-    private Double cash;
+    private String phone;
 
-    @Column(name = "total")
-    private Double totalAmount;
+    private String floor;
+
+    private String room;
+
+    @Enumerated(EnumType.STRING)
+    private PatientStatus status;
 
     @Column(name = "created_date")
     private LocalDate createdDate = LocalDate.now(ZoneId.of("Asia/Tashkent"));
-
 
 }

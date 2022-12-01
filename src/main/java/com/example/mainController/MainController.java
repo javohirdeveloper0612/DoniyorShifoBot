@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.mainController;
 
 import com.example.step.Constant;
 import com.example.step.Step;
@@ -29,10 +29,10 @@ public class MainController {
     @Autowired
     private OutPutsController outPutsController;
     @Autowired
-    private ResidualController residualController;
+    private ProfitController profitController;
 
     @Autowired
-    private SickCountController sickCountController;
+    private PatientCountController patientCountController;
 
     @Autowired
     private AddAdminController addAdminController;
@@ -124,18 +124,18 @@ public class MainController {
                 }
 
                 if (users.getStep().equals(Step.RESIDUAL)) {
-                    residualController.handle(message);
+                    profitController.handle(message);
                     return;
                 }
 
                 if (users.getStep().equals(Step.COUNT)) {
-                    sickCountController.handle(message);
+                    patientCountController.handle(message);
                     return;
                 }
 
                 if (users.getStep().equals(Step.ADMIN)) {
                     addAdminController.handle(message);
-                    return;
+
                 }
 
 

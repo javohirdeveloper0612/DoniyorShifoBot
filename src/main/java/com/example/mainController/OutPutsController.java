@@ -1,9 +1,8 @@
-package com.example.controller;
+package com.example.mainController;
 
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
-import com.example.telegramBot.MyTelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,53 +11,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class ResidualController {
+public class OutPutsController {
 
+    private List<TelegramUsers> usersList = new ArrayList<>();
+
+    @Autowired
+    private MainController mainController;
 
     @Autowired
     private MainMenuController menuController;
 
 
-    @Autowired
-    private MainController mainController;
-
-    private List<TelegramUsers> usersList = new ArrayList<>();
-
-
     public void handle(Message message) {
-
 
         TelegramUsers users = mainController.saveUser(message.getChatId());
 
-        TelegramUsers residual = saveUser(message.getChatId());
-
+        TelegramUsers outPuts = saveUser(message.getChatId());
 
         String text = message.getText();
 
-        if (residual.getStep() == null) {
-            residual.setStep(Step.RESIDUAL);
+        if (outPuts.getStep() == null) {
+            outPuts.setStep(Step.OUTPUTS);
         }
 
-        if (residual.getStep().equals(Step.RESIDUAL)) {
-
+        if (outPuts.getStep().equals(Step.OUTPUTS)) {
 
             switch (text) {
                 case Constant.naxd -> {
                     //naxd
-                    menuController.naxqQoldilar(message);
-                    residual.setStep(Step.NAXD);
+                    menuController.naxdMenuChiqim(message);
+                    outPuts.setStep(Step.NAXD);
                 }
 
                 case Constant.plastik -> {
                     //plastik
-                    menuController.plastikQoldilar(message);
-                    residual.setStep(Step.PLASTIK);
+                    menuController.plastikChiqimMenu(message);
+                    outPuts.setStep(Step.PLASTIK);
                 }
 
                 case Constant.umumiyBlance -> {
                     //umumiy
-                    menuController.totalResidualOutputs(message);
-                    residual.setStep(Step.TOTALAMOUNTINPUTS);
+                    menuController.totalAmountOutputs(message);
+                    outPuts.setStep(Step.TOTALAMOUNTOUTPUTS);
+
                 }
 
 
@@ -70,8 +65,7 @@ public class ResidualController {
 
         }
 
-
-        if (residual.getStep().equals(Step.NAXD)) {
+        if (outPuts.getStep().equals(Step.PLASTIK)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -87,13 +81,14 @@ public class ResidualController {
 
                 case Constant.backToMenu -> {
 
-                    menuController.inputsMenu(message);
-                    residual.setStep(Step.RESIDUAL);
+                    menuController.outPutsMenu(message);
+                    outPuts.setStep(Step.OUTPUTS);
                 }
             }
-        }
 
-        if (residual.getStep().equals(Step.PLASTIK)) {
+
+        }
+        if (outPuts.getStep().equals(Step.NAXD)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -109,13 +104,14 @@ public class ResidualController {
 
                 case Constant.backToMenu -> {
 
-                    menuController.inputsMenu(message);
-                    residual.setStep(Step.RESIDUAL);
+                    menuController.outPutsMenu(message);
+                    outPuts.setStep(Step.OUTPUTS);
                 }
             }
         }
 
-        if (residual.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
+
+        if (outPuts.getStep().equals(Step.TOTALAMOUNTOUTPUTS)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -131,11 +127,14 @@ public class ResidualController {
 
                 case Constant.backToMenu -> {
 
-                    menuController.inputsMenu(message);
-                    residual.setStep(Step.RESIDUAL);
+                    menuController.outPutsMenu(message);
+                    outPuts.setStep(Step.OUTPUTS);
                 }
             }
+
         }
+
+
     }
 
 
@@ -155,5 +154,4 @@ public class ResidualController {
 
         return users;
     }
-
 }

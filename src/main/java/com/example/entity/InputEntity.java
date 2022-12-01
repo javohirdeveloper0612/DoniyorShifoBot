@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Getter
 @Setter
@@ -24,7 +25,7 @@ public class InputEntity {
     private Double totalAmount;
 
     @Column(name = "created_date")
-    private LocalDate createdDate;
+    private LocalDate createdDate = LocalDate.now(ZoneId.of("Asia/Tashkent"));
 
 
 }

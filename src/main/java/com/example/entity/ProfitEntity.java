@@ -11,8 +11,8 @@ import java.time.ZoneId;
 @Setter
 
 @Entity
-@Table(name = "output")
-public class OutputEntity {
+@Table(name = "profit")
+public class ProfitEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

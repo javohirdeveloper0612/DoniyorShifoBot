@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.mainController;
 
 import com.example.step.Constant;
 import com.example.step.Step;

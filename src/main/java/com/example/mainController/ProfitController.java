@@ -1,9 +1,8 @@
-package com.example.controller;
+package com.example.mainController;
 
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
-import com.example.telegramBot.MyTelegramBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -12,13 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class InputsController {
+public class ProfitController {
+
 
     @Autowired
     private MainMenuController menuController;
 
-    @Autowired
-    private MyTelegramBot myTelegramBot;
 
     @Autowired
     private MainController mainController;
@@ -31,35 +29,35 @@ public class InputsController {
 
         TelegramUsers users = mainController.saveUser(message.getChatId());
 
-        TelegramUsers inPuts = saveUser(message.getChatId());
+        TelegramUsers residual = saveUser(message.getChatId());
 
 
         String text = message.getText();
 
-        if (inPuts.getStep() == null) {
-            inPuts.setStep(Step.INPUTS);
+        if (residual.getStep() == null) {
+            residual.setStep(Step.RESIDUAL);
         }
 
-        if (inPuts.getStep().equals(Step.INPUTS)) {
+        if (residual.getStep().equals(Step.RESIDUAL)) {
 
 
             switch (text) {
                 case Constant.naxd -> {
                     //naxd
-                    menuController.naxdKirimMenu(message);
-                    inPuts.setStep(Step.NAXDIN);
+                    menuController.naxqQoldilar(message);
+                    residual.setStep(Step.NAXD);
                 }
 
                 case Constant.plastik -> {
                     //plastik
-                    menuController.plastikKirimMenu(message);
-                    inPuts.setStep(Step.PLASTIKIN);
+                    menuController.plastikQoldilar(message);
+                    residual.setStep(Step.PLASTIK);
                 }
 
                 case Constant.umumiyBlance -> {
                     //umumiy
-                    menuController.totalAmount(message);
-                    inPuts.setStep(Step.TOTALAMOUNTINPUTS);
+                    menuController.totalResidualOutputs(message);
+                    residual.setStep(Step.TOTALAMOUNTINPUTS);
                 }
 
 
@@ -72,7 +70,7 @@ public class InputsController {
         }
 
 
-        if (inPuts.getStep().equals(Step.NAXDIN)) {
+        if (residual.getStep().equals(Step.NAXD)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -89,12 +87,12 @@ public class InputsController {
                 case Constant.backToMenu -> {
 
                     menuController.inputsMenu(message);
-                    inPuts.setStep(Step.INPUTS);
+                    residual.setStep(Step.RESIDUAL);
                 }
             }
         }
 
-        if (inPuts.getStep().equals(Step.PLASTIKIN)) {
+        if (residual.getStep().equals(Step.PLASTIK)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -111,12 +109,12 @@ public class InputsController {
                 case Constant.backToMenu -> {
 
                     menuController.inputsMenu(message);
-                    inPuts.setStep(Step.INPUTS);
+                    residual.setStep(Step.RESIDUAL);
                 }
             }
         }
 
-        if (inPuts.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
+        if (residual.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
@@ -128,14 +126,12 @@ public class InputsController {
 
                 case Constant.kunBuyicha -> {
                     // kiritilgan sana buyicha kirimlar
-
-
                 }
 
                 case Constant.backToMenu -> {
 
                     menuController.inputsMenu(message);
-                    inPuts.setStep(Step.INPUTS);
+                    residual.setStep(Step.RESIDUAL);
                 }
             }
         }
@@ -158,6 +154,5 @@ public class InputsController {
 
         return users;
     }
-
 
 }

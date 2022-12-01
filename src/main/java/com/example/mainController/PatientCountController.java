@@ -1,4 +1,4 @@
-package com.example.controller;
+package com.example.mainController;
 
 import com.example.step.Constant;
 import com.example.step.Step;
@@ -7,12 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class SickCountController {
+public class PatientCountController {
 
 
     private List<TelegramUsers> usersList = new ArrayList<>();
