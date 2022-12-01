@@ -30,5 +30,17 @@ public interface Constant {
     String addAdmin = "Admin qushish ➕";
     String removeAdmin = "Admin olib tashlash ❌";
 
+    String addAccountent = "Kassir qushish";
+
+    String addNurse = "Xamshira qushish";
+
+    String deletAccountent = "Kassirni uchirish";
+
+    String deleteNurse = "Xamshirani uchirish";
+
+    String listAccountent = "Kasrlar ro'yxati 📃";
+
+    String listNurse = "Xamshiralar ro'yxati 📃";
+
 
 }

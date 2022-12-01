@@ -2,7 +2,7 @@ package com.example.telegramBot;
 
 import com.example.config.BotConfig;
 import com.example.controller.AccountentController;
-import com.example.controller.AdminController;
+import com.example.admin.AdminController;
 import com.example.controller.NurseController;
 import com.example.mainController.MainController;
 import com.example.service.UsersService;

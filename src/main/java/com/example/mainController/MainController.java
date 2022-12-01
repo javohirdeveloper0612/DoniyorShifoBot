@@ -49,11 +49,8 @@ public class MainController {
 
                 String text = message.getText();
 
-                if (users.getStep() == null) {
-                    users.setStep(Step.MAIN);
-                }
 
-                if (text.equals("/start")) {
+                if (text.equals("/start") || users.getStep() == null) {
                     menuController.mainMenu(message);
                     users.setStep(Step.MAIN);
                 }
