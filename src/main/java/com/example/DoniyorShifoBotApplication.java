@@ -9,8 +9,7 @@ public class DoniyorShifoBotApplication {
     public static void main(String[] args) {
         SpringApplication.run(DoniyorShifoBotApplication.class, args);
 
-        //hghgh
-
+        // salomlar
     }
 
 }
