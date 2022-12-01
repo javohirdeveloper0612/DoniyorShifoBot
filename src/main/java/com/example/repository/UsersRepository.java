@@ -7,6 +7,7 @@ import java.util.Optional;
 
 public interface UsersRepository extends CrudRepository<UsersEntity, Integer> {
 
+    Optional<UsersEntity> findByUserId(Long userId);
 
-    Optional<UsersEntity> findByPassword(String password);
+    boolean existsByPassword(String password);
 }

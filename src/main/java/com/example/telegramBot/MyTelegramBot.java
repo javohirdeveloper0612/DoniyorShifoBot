@@ -4,8 +4,11 @@ import com.example.config.BotConfig;
 import com.example.accountent.AccountentController;
 import com.example.admin.AdminController;
 import com.example.controller.NurseController;
+import com.example.entity.UsersEntity;
 import com.example.mainController.MainController;
 import com.example.service.UsersService;
+import com.example.step.Step;
+import com.example.step.TelegramUsers;
 import com.example.util.SendMsg;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -17,9 +20,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 @Component
 public class MyTelegramBot extends TelegramLongPollingBot {
 
+    List<TelegramUsers> usersList = new ArrayList<>();
     private final MainController mainController;
     private final AdminController adminController;
     private final NurseController nurseController;
@@ -47,38 +55,64 @@ public class MyTelegramBot extends TelegramLongPollingBot {
 
         Message message = update.getMessage();
 
-        mainController.handle(update);
-
-
         if (userId == 191794566) {
             mainController.handle(update);
             return;
         }
 
+        usersService.checkPasssword(message);
+        TelegramUsers telegramUsers = saveUser(userId);
+        telegramUsers.setStep(Step.CHECKPASSWORD);
 
-        String role = usersService.getPassword(message.getText(), message.getChatId());
+        if (telegramUsers.getStep().equals(Step.CHECKPASSWORD)) {
 
-        if (role.equals("ADMIN")) {
-            //admin controllerga junatiladi
-            adminController.handle(message);
-            return;
+            boolean password = usersService.getByPassword(message);
+
+            if (password) {
+
+                String role = usersService.getUserId(userId);
+
+                if (role != null) {
+
+                    if (role.equals("NURSE")) {
+                        nurseController.handle(message);
+                        return;
+                    }
+
+                    if (role.equals("ACCOUNTENT")) {
+                        accountentController.handle(message);
+                        return;
+                    }
+
+                    if (role.equals("ADMIN")) {
+                        adminController.handle(message);
+                    }
+
+                }
+            } else {
+
+                usersService.sendErrorPassword(message);
+
+            }
         }
 
-        if (role.equals("NURSE")) {
-            //nurse controller ga junatiladi
-            nurseController.handle(message);
-            return;
+    }
+
+    public TelegramUsers saveUser(Long chatId) {
+
+        for (TelegramUsers users : usersList) {
+            if (users.getChatId().equals(chatId)) {
+                return users;
+            }
         }
-
-        if (role.equals("ACCOUNTENT")) {
-            accountentController.handle(message);
-            return;
-        }
-
-        send(SendMsg.sendMsg(message.getChatId(),
-                "Iltimos Botdan foydalanish uchun sizga berilgan parolni kiriting ! "));
+//        userController.getStep(chatId);
 
 
+        TelegramUsers users = new TelegramUsers();
+        users.setChatId(chatId);
+        usersList.add(users);
+
+        return users;
     }
 
     public void send(SendMessage sendMessage) {
