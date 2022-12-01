@@ -10,6 +10,7 @@ public class DoniyorShifoBotApplication {
         SpringApplication.run(DoniyorShifoBotApplication.class, args);
 
         // salomlar
+        //mazigios
     }
 
 }
