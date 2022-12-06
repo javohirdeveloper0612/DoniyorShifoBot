@@ -12,6 +12,7 @@ public class SendMsg {
         sendMessage.setText(text);
         return sendMessage;
     }
+
     public static SendMessage sendMsg(Long id, String text, ReplyKeyboardMarkup markup) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(id);
@@ -20,6 +21,7 @@ public class SendMsg {
 
         return sendMessage;
     }
+
     public static SendPhoto sendPhoto(Long id, String text, String inputFile) {
         SendPhoto sendPhoto = new SendPhoto();
         InputFile input = new InputFile();
@@ -29,5 +31,25 @@ public class SendMsg {
         sendPhoto.setCaption(text);
 
         return sendPhoto;
+    }
+
+    public static SendMessage sendMsgParse(Long id, String text, ReplyKeyboardMarkup markup) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(id);
+        sendMessage.setText(text);
+        sendMessage.setParseMode("Markdown");
+        sendMessage.setReplyMarkup(markup);
+
+        return sendMessage;
+
+
+    }
+
+    public static SendMessage sendMsgParse(Long id, String text) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(id);
+        sendMessage.setText(text);
+        sendMessage.setParseMode("Markdown");
+        return sendMessage;
     }
 }

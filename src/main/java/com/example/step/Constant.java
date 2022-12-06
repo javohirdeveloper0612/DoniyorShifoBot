@@ -30,17 +30,17 @@ public interface Constant {
     String addAdmin = "Admin qushish ➕";
     String removeAdmin = "Admin olib tashlash ❌";
 
-    String addAccountent = "Kassir qushish";
+    String addAccountent = "Kassir qo'shish ➕";
 
-    String addNurse = "Xamshira qushish";
+    String addNurse = "Hamshira qushish ➕";
 
-    String deletAccountent = "Kassirni uchirish";
+    String deletAccountent = "Kassirni o'chirish \uD83D\uDDD1";
 
-    String deleteNurse = "Xamshirani uchirish";
+    String deleteNurse = "Hamshirani o'chirish \uD83D\uDDD1";
 
-    String listAccountent = "Kasrlar ro'yxati 📃";
+    String listAccountent = "Kassrlar ro'yxati  \uD83D\uDCDA";
 
-    String listNurse = "Xamshiralar ro'yxati 📃";
+    String listNurse = "Hamshiralar ro'yxati \uD83D\uDCDA";
 
     String addInput = "Kirimlarni kiritish";
     String addOutput = "Chiqimlarni kiritish";

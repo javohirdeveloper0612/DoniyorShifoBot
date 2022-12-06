@@ -57,8 +57,13 @@ public class MyTelegramBot extends TelegramLongPollingBot {
             mainController.handle(message);
             return;
         }
-        if ( userId == 1541606718){
+        if (userId == 1541606718) {
             nurseController.handleNurse(message);
+            return;
+        }
+
+        if (userId == 1030035146) {
+            adminController.handle(message);
             return;
         }
 

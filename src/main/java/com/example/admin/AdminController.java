@@ -16,11 +16,16 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-    @Autowired
-    private MyTelegramBot myTelegramBot;
+    private final MyTelegramBot myTelegramBot;
 
+    private final AccountentService accountentService;
 
     private List<TelegramUsers> usersList = new ArrayList<>();
+
+    public AdminController(AccountentService accountentService, MyTelegramBot myTelegramBot) {
+        this.accountentService = accountentService;
+        this.myTelegramBot = myTelegramBot;
+    }
 
     public void handle(Message message) {
 
@@ -40,19 +45,64 @@ public class AdminController {
 
             switch (text) {
                 case Constant.addAccountent -> {
-                    // yangi kasr qushish
-
-                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "safaw"));
+                    accountentService.getAccountentFullName(message);
+                    users.setStep(Step.GETACCOUNTENTFULLNAME);
+                    return;
                 }
+
+                case Constant.addNurse -> {
+
+                }
+
+                case Constant.deleteNurse -> {
+
+                }
+
+                case Constant.deletAccountent -> {
+
+                }
+
+                case Constant.listAccountent -> {
+
+                }
+
+                case Constant.listNurse -> {
+
+                }
+
+
             }
+        }
+
+        switch (users.getStep()) {
+
+            case GETACCOUNTENTFULLNAME: {
+                accountentService.getAccountentPhone(message);
+                users.setStep(Step.GETACCOUNTENTPHONE);
+                return;
+            }
+
+            case GETACCOUNTENTPHONE: {
+                boolean b = accountentService.checkPhone(message);
+                accountentService.getAccountentPassword(message);
+                users.setStep(Step.GETACCOUNTENTPASSWORD);
+                return;
+            }
+
+            case GETACCOUNTENTPASSWORD: {
+                accountentService.saveAccountent(message);
+                mainMenu(message);
+                users.setStep(Step.MAIN);
+            }
+
+
         }
     }
 
 
     public void mainMenu(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                "Assosiy menyuga xush kelibsiz",
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
+                "*Assalomu alekum admin panelga  menyuga xush kelibsiz*",
                 Button.markup(Button.rowList(Button.row(Button.button(Constant.addAccountent),
                                 Button.button(Constant.addNurse)
                         ),

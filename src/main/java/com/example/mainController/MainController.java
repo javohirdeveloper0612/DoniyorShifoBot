@@ -8,6 +8,7 @@ import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -19,27 +20,30 @@ import java.util.List;
 public class MainController {
 
     List<TelegramUsers> usersList = new ArrayList<>();
-    @Autowired
-    private MyTelegramBot myTelegramBot;
+    private final MyTelegramBot myTelegramBot;
 
-    @Autowired
-    private MainMenuController menuController;
+    private final MainMenuController menuController;
 
-    @Autowired
-    private InputsController inputsController;
+    private final InputsController inputsController;
 
-    @Autowired
-    private OutPutsController outPutsController;
-    @Autowired
-    private ProfitController profitController;
+    private final OutPutsController outPutsController;
+    private final ProfitController profitController;
 
-    @Autowired
-    private PatientCountController patientCountController;
+    private final PatientCountController patientCountController;
 
-    @Autowired
-    private AddAdminController addAdminController;
-    @Autowired
-    private PatientController patientController;
+    private final AddAdminController addAdminController;
+    private final PatientController patientController;
+
+    public MainController(@Lazy MyTelegramBot myTelegramBot, @Lazy MainMenuController menuController, @Lazy InputsController inputsController, @Lazy OutPutsController outPutsController, @Lazy ProfitController profitController, @Lazy PatientCountController patientCountController, @Lazy AddAdminController addAdminController, @Lazy PatientController patientController) {
+        this.myTelegramBot = myTelegramBot;
+        this.menuController = menuController;
+        this.inputsController = inputsController;
+        this.outPutsController = outPutsController;
+        this.profitController = profitController;
+        this.patientCountController = patientCountController;
+        this.addAdminController = addAdminController;
+        this.patientController = patientController;
+    }
 
 
     public void handle(Message message) {
