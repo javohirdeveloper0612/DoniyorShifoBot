@@ -18,32 +18,36 @@ public class NurseController {
     @Autowired
     private MyTelegramBot myTelegramBot;
 
+    @Autowired
+    private NurseService nurseService;
+
 
     public void handleNurse(Message message) {
 
-        TelegramUsers users = saveUser(message.getChatId());
+        TelegramUsers step = saveUser(message.getChatId());
         String text = message.getText();
 
-        if (text.equals("/start")) {
-            nurseMenuButton(message);
+        NurseDTO dto = new NurseDTO();
+        creationPatient(dto);
+
+        if (text.equals("/start") || step.getStep() == null) {
+            nurseService.nurseMenuButton(message);
+            step.setStep(Step.START);
         }
 
-        if (users.getStep() == null) {
-            users.setStep(Step.PATIENTATART);
-        }
+        if (step.getStep().equals(Step.START)) {
 
-
-        if (users.getStep().equals(Step.PATIENTATART)) {
 
             switch (text) {
 
                 case Constant.bemorQoshish -> {
 
-                    enterFullName(message);
-                    users.setStep(Step.PATIENTPHONE);
+                    nurseService.enterFullName(message);
+                    step.setStep(Step.PATIENTFULLNAME);
                     return;
 
                 }
+
                 case Constant.bemorQidirish -> {
 
 
@@ -56,50 +60,48 @@ public class NurseController {
 
 
                 }
-            }
-
-            if (users.getStep().equals(Step.PATIENTPHONE)) {
-
-                enterPhone(message);
 
             }
+
+        }
+
+        //***************************** BEMOR REGISTRATSIYA **************************************
+
+
+        switch (step.getStep()) {
+
+            case PATIENTFULLNAME -> {
+                dto.setFullName(text);
+                nurseService.enterPhone(message);
+                step.setStep(Step.PATIENTPHONE);
+            }
+
+            case PATIENTPHONE -> {
+                dto.setPhone(text);
+                nurseService.enterFloor(message);
+                step.setStep(Step.PATIENTFLOOR);
+            }
+
+            case PATIENTFLOOR -> {
+                dto.setFloor(text);
+                nurseService.enterHouse(message);
+                step.setStep(Step.PATIENTHOUSE);
+
+            }
+
+            case PATIENTHOUSE -> {
+                dto.setRoom(text);
+                nurseService.endPatientRegistration(message);
+                nurseService.nurseMenuButton2(message);
+            }
+
         }
 
     }
 
 
-    public void enterFullName(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning  Ism va Familyasini kiriting : "));
-    }
-
-    public void enterPhone(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning telefon raqamini kiriting : (+99 89? ??? ?? ??)"));
-    }
-
-    public void enterFloor(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning honasini qavat raqamini kiriting : "));
-    }
-
-    public void enterHouse(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning hona raqamini kiriting :"));
-    }
-
-    public void searchPatientNameAndSurname(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorni topish uchun bemorning Ism va Familyasini kiriting : "));
-    }
-
-    public void deletePatientNameAndSurname(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorni o'chirish uchun bemorning Ism va Familyasini kiriting : "));
-    }
-
-    public void patientRoyxati(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Doniyor Shifo Klinikasidagi bemorlar ro'yxati : "));
-    }
-
-
-    public void nurseMenuButton(Message message) {
-
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Asalom Alaykum Hamshira Bo'limiga xush kelibsiz : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
+    public void creationPatient(NurseDTO dto) {
+        nurseService.creationPatient(dto);
     }
 
     public TelegramUsers saveUser(Long chatId) {

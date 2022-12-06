@@ -1,5 +1,4 @@
 package com.example.mainController;
-
 import com.example.mainController.inputAndOutput.InputsController;
 import com.example.mainController.inputAndOutput.OutPutsController;
 import com.example.step.Constant;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +69,7 @@ public class MainController {
                         menuController.inputsMenu(message);
                         users.setStep(Step.INPUTS);
 
-                        return;
+
                     }
 
                     case Constant.chiqim -> {
@@ -88,12 +85,14 @@ public class MainController {
                         menuController.qoldiqMenu(message);
                         users.setStep(Step.RESIDUAL);
                         return;
+
                     }
 
                     case Constant.bemorQidirish -> {
 
                         menuController.searchPatient(message);
                         users.setStep(Step.SEARCHPATIENT);
+
                     }
 
                     case Constant.bemorlarSoni -> {
@@ -116,6 +115,7 @@ public class MainController {
 
 
             //kirimlar ************************
+
             if (users.getStep().equals(Step.INPUTS)) {
 
                 inputsController.handle(message);
