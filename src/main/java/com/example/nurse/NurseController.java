@@ -1,5 +1,4 @@
 package com.example.nurse;
-
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -8,9 +7,7 @@ import com.example.util.Button;
 import com.example.util.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,141 +19,87 @@ public class NurseController {
     private MyTelegramBot myTelegramBot;
 
 
-    public void handle(Message message) {
+    public void handleNurse(Message message) {
 
         TelegramUsers users = saveUser(message.getChatId());
         String text = message.getText();
 
-        if (users.getStep() == null) {
+        if (text.equals("/start")) {
             nurseMenuButton(message);
-            users.setStep(Step.ADDPATIENT);
-        } else {
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(message.getChatId());
-            sendMessage.setText("Kechirasiz Notog'ri buyruq kiritildi !!!");
         }
 
-        if (users.getStep().equals(Step.ADDPATIENT)) {
+        if (users.getStep() == null) {
+            users.setStep(Step.PATIENTATART);
+        }
+
+
+        if (users.getStep().equals(Step.PATIENTATART)) {
 
             switch (text) {
 
                 case Constant.bemorQoshish -> {
-                    users.setStep(Step.PATIENTADD);
 
-
-                    if (users.getStep().equals(Step.PATIENTADD)) {
-                        users.setStep(Step.ENTERNAMEPATIENT);
-
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Bemor qoshish"));
-
-                        // BEMORNI ISMI KIRITILADI VA QABUL QILIB OLAMIZ
-
-                        if (users.getStep().equals(Step.ENTERNAMEPATIENT)) {
-                            users.setStep(Step.ENTERSURNAMEPATIENT);
-
-                            // BEMORNI FAMILYASI KIRITILADI VA QABUL QILIB OLAMIZ
-
-                        } else if (users.getStep().equals(Step.ENTERSURNAMEPATIENT)) {
-                            users.setStep(Step.ENTERPHONEPATIENT);
-
-                            // BEMORNI TELEFON RAQAM KIRITADI VA QABUL QILIB OLAMIZ
-
-                        } else if (users.getStep().equals(Step.ENTERPHONEPATIENT)) {
-                            users.setStep(Step.ENTERFLOORPATIENT);
-
-                            //BEMORNI YOTGAN QAVAT RAQAMINI KIRITADI VA BIZ QABUL QILIB OLAMIZ
-
-
-                        } else if (users.getStep().equals(Step.ENTERFLOORPATIENT)) {
-                            users.setStep(Step.ENTERHOUSEPATIENT);
-
-                            //BEMORNI YOTGAN HONA RAQAMINI KIRITADI
-
-                        } else if (users.getStep().equals(Step.ENTERHOUSEPATIENT)) {
-                            users.setStep(Step.FINISHEDADDPATIENT);
-
-                            // BEMORNI YOTGAN HONA RAQAMINI QABUL QILIB OLAMIZ
-
-                        } else if (users.getStep().equals(Step.FINISHEDADDPATIENT)) {
-
-                            // Xamshiraga registratsiya tugagini aytamiz
-                        }
-                    }
-
+                    enterFullName(message);
+                    users.setStep(Step.PATIENTPHONE);
+                    return;
 
                 }
                 case Constant.bemorQidirish -> {
-                    users.setStep(Step.SEARCHPATIENT);
-
-                    if (users.getStep().equals(Step.SEARCHPATIENT)) {
-                        users.setStep(Step.SEARCHNAMEPATIENT);
-
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Bemor Qidirish"));
-
-                    } else if (users.getStep().equals(Step.SEARCHNAMEPATIENT)) {
-                        users.setStep(Step.SEARCHSURNAMEPATIENT);
-
-
-                    } else if (users.getStep().equals(Step.SEARCHSURNAMEPATIENT)) {
-
-                        //  myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                        //                      "mazgi" ));
-
-                    }
 
 
                 }
                 case Constant.bemorOchirish -> {
-                    users.setStep(Step.DELETEDPATIENT);
-
-                    if (users.getStep().equals(Step.DELETEDPATIENT)) {
-                        users.setStep(Step.DELETEDBYIDPATIENT);
-
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Bemor ochirish"));
-
-                    } else if (users.getStep().equals(Step.DELETEDBYIDPATIENT)) {
-
-
-                    }
 
 
                 }
                 case Constant.bemorlarRoyhati -> {
-                    users.setStep(Step.PATIENTLIST);
 
-                    if (users.getStep().equals(Step.PATIENTLIST)) {
-
-                        // Bemorlar royhati excel formatda korsatiladi__
-
-                    }
-
-                    // Data Basedagi hama bemorlar royhatini
-                    // Excel foirmatda tekshirish
 
                 }
             }
-        }
 
+            if (users.getStep().equals(Step.PATIENTPHONE)) {
+
+                enterPhone(message);
+
+            }
+        }
 
     }
 
+
+    public void enterFullName(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning  Ism va Familyasini kiriting : "));
+    }
+
+    public void enterPhone(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning telefon raqamini kiriting : (+99 89? ??? ?? ??)"));
+    }
+
+    public void enterFloor(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning honasini qavat raqamini kiriting : "));
+    }
+
+    public void enterHouse(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning hona raqamini kiriting :"));
+    }
+
+    public void searchPatientNameAndSurname(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorni topish uchun bemorning Ism va Familyasini kiriting : "));
+    }
+
+    public void deletePatientNameAndSurname(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorni o'chirish uchun bemorning Ism va Familyasini kiriting : "));
+    }
+
+    public void patientRoyxati(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Doniyor Shifo Klinikasidagi bemorlar ro'yxati : "));
+    }
+
+
     public void nurseMenuButton(Message message) {
 
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                "Asalom Alaykum Hamshira Bo'limiga xush kelibsiz : ",
-                Button.markup(Button.rowList(
-                        Button.row(
-                                Button.button(Constant.bemorQoshish),
-                                Button.button(Constant.bemorQidirish)
-                        ),
-                        Button.row(
-                                Button.button(Constant.bemorOchirish),
-                                Button.button(Constant.bemorlarRoyhati)
-                        )
-                ))));
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Asalom Alaykum Hamshira Bo'limiga xush kelibsiz : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
     }
 
     public TelegramUsers saveUser(Long chatId) {

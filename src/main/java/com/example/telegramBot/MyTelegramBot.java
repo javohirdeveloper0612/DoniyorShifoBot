@@ -57,6 +57,10 @@ public class MyTelegramBot extends TelegramLongPollingBot {
             mainController.handle(message);
             return;
         }
+        if ( userId == 1541606718){
+            nurseController.handleNurse(message);
+            return;
+        }
 
         boolean check = false;
         boolean password;
@@ -77,7 +81,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
                 String role = usersService.getUserId(userId);
                 if (role != null) {
                     if (role.equals("NURSE")) {
-                        nurseController.handle(message);
+                        nurseController.handleNurse(message);
 
                         return;
                     }
