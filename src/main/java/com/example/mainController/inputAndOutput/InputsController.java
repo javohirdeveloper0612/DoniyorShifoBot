@@ -1,13 +1,19 @@
-package com.example.mainController;
+package com.example.mainController.inputAndOutput;
 
+import com.example.dto.InputDTO;
+import com.example.mainController.MainController;
+import com.example.mainController.MainMenuController;
+import com.example.service.InputsService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
+import com.example.util.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +28,9 @@ public class InputsController {
 
     @Autowired
     private MainController mainController;
+
+    @Autowired
+    private InputsService inputsService;
 
     private List<TelegramUsers> usersList = new ArrayList<>();
 
@@ -69,6 +78,8 @@ public class InputsController {
                 }
             }
 
+            return;
+
         }
 
 
@@ -77,6 +88,20 @@ public class InputsController {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
 
+                    InputDTO dto = inputsService.getInputCashByCreatedDate();
+
+                    if (dto == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Bugun hisobidan kirimlar kiritilmagan !"));
+                        return;
+                    }
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Bugun: " + dto.getCreatedDate() + "\n\n" +
+                                    "Bugungi naxd kirimlar miqdori = " + dto.getCash() + " so'm\n"
+                    ));
+                    inPuts.setStep(Step.NAXDIN);
+
                 }
 
                 case Constant.kun10 -> {
@@ -85,20 +110,40 @@ public class InputsController {
 
                 case Constant.kunBuyicha -> {
                     // kiritilgan sana buyicha kirimlar
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Qidirmoqchi bulgan sanani kiritig: masalan(2022-12-12)"));
+                    inPuts.setStep(Step.PUTDATE);
                 }
 
                 case Constant.backToMenu -> {
 
                     menuController.inputsMenu(message);
+
                     inPuts.setStep(Step.INPUTS);
                 }
             }
+            return;
         }
 
         if (inPuts.getStep().equals(Step.PLASTIKIN)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
+
+                    InputDTO dto = inputsService.getInputCardByCreatedDate();
+
+                    if (dto == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Bugun hisobidan kirimlar kiritilmagan !"));
+                        return;
+                    }
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Bugun: " + dto.getCreatedDate() + "\n\n" +
+                                    "Bugungi plastik kirimlar miqdori = " + dto.getCard() + " so'm\n"
+                    ));
+
                 }
 
                 case Constant.kun10 -> {
@@ -115,12 +160,29 @@ public class InputsController {
                     inPuts.setStep(Step.INPUTS);
                 }
             }
+            return;
         }
 
         if (inPuts.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
+
+                    InputDTO dto = inputsService.getInputCashByCreatedDate();
+
+                    if (dto == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Bugun hisobidan kirimlar kiritilmagan !"));
+                        return;
+                    }
+
+                    Double total = dto.getCard() + dto.getCash();
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Bugun: " + dto.getCreatedDate() + "\n\n" +
+                                    "Bugungi umumiy kirimlar miqdori = " + total +
+                                    " so'm\n"
+                    ));
+
                 }
 
                 case Constant.kun10 -> {
@@ -138,8 +200,50 @@ public class InputsController {
                     menuController.inputsMenu(message);
                     inPuts.setStep(Step.INPUTS);
                 }
+
+            }
+            return;
+        }
+
+        switch (inPuts.getStep()) {
+
+
+            case PUTDATE -> {
+
+
+                LocalDate date = null;
+
+
+                try {
+
+                    date = LocalDate.parse(message.getText());
+
+                } catch (RuntimeException e) {
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Iltimos sanani to'g'ri kiriting !"));
+                    return;
+                }
+
+
+                InputDTO dto = inputsService.getInputByGivenDate(date);
+
+                if (dto == null) {
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Kiritilgan sana boyicha kirimlar topilmadi ! \n" +
+                                    "Qaytadan kiriting ! "));
+                    return;
+                }
+
+
+                myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                        "Ushbu " + dto.getCreatedDate() + "\n\n" +
+                                "kundagi naxd kirimlar miqdori = " + dto.getCash() +
+                                " so'm\n"));
+                inPuts.setStep(Step.NAXDIN);
+
             }
         }
+
     }
 
 

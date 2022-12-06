@@ -29,9 +29,11 @@ public class AdminController {
         String text = message.getText();
 
 
-        if (text.equals("/start") || users.getStep() == null) {
+        if (users.getStep() == null) {
             mainMenu(message);
             users.setStep(Step.MAIN);
+
+
         }
 
         if (users.getStep().equals(Step.MAIN)) {
@@ -40,7 +42,8 @@ public class AdminController {
                 case Constant.addAccountent -> {
                     // yangi kasr qushish
 
-
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "safaw"));
                 }
             }
         }

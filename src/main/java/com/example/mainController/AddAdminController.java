@@ -5,6 +5,7 @@ import com.example.step.Step;
 import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -20,7 +21,7 @@ public class AddAdminController {
 
     private final MyTelegramBot myTelegramBot;
 
-    public AddAdminController(MainMenuController mainMenuController, MainController mainController, MyTelegramBot myTelegramBot) {
+    public AddAdminController(@Lazy MainMenuController mainMenuController, @Lazy MainController mainController, @Lazy MyTelegramBot myTelegramBot) {
         this.mainMenuController = mainMenuController;
         this.mainController = mainController;
         this.myTelegramBot = myTelegramBot;

@@ -27,6 +27,8 @@ public class UsersService {
             return null;
         }
         UsersEntity usersEntity = optional.get();
+        System.out.println(usersEntity.getRole());
+
         return String.valueOf(usersEntity.getRole());
     }
 

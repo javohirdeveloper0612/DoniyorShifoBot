@@ -1,5 +1,7 @@
 package com.example.mainController;
 
+import com.example.mainController.inputAndOutput.InputsController;
+import com.example.mainController.inputAndOutput.OutPutsController;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -36,111 +38,123 @@ public class MainController {
 
     @Autowired
     private AddAdminController addAdminController;
+    @Autowired
+    private PatientController patientController;
 
 
-    public void handle(Update update) {
+    public void handle(Message message) {
 
-        TelegramUsers users = saveUser(update.getMessage().getChatId());
-        if (update.hasMessage()) {
-
-            Message message = update.getMessage();
-
-            if (message.hasText()) {
-
-                String text = message.getText();
+        TelegramUsers users = saveUser(message.getChatId());
 
 
-                if (text.equals("/start") || users.getStep() == null) {
-                    menuController.mainMenu(message);
-                    users.setStep(Step.MAIN);
-                }
+        if (message.hasText()) {
 
-                if (users.getStep().equals(Step.MAIN)) {
-
-                    switch (text) {
+            String text = message.getText();
 
 
-                        case Constant.kirim -> {
-
-                            //krimlar
-                            menuController.inputsMenu(message);
-                            users.setStep(Step.INPUTS);
-
-                            return;
-                        }
-
-                        case Constant.chiqim -> {
-                            //chiqimlar
-                            menuController.outPutsMenu(message);
-                            users.setStep(Step.OUTPUTS);
-                            return;
-                        }
-
-                        case Constant.qoldiq -> {
-                            //qoldiqlar
-
-                            menuController.qoldiqMenu(message);
-                            users.setStep(Step.RESIDUAL);
-                            return;
-                        }
-
-                        case Constant.bemorlarSoni -> {
-                            //bemorlar soni
-                            menuController.countSick(message);
-                            users.setStep(Step.COUNT);
-                            return;
-                        }
-
-                        case Constant.adminMenu -> {
-                            //adminMenu
-                            menuController.addAdminMenu(message);
-                            users.setStep(Step.ADMIN);
-
-                            return;
-                        }
-                    }
-                    return;
-                }
-
-
-                //kirimlar ************************
-                if (users.getStep().equals(Step.INPUTS)) {
-
-                    inputsController.handle(message);
-                    return;
-
-                }
-
-
-                //   chiqimlar ***********************************************
-
-
-                if (users.getStep().equals(Step.OUTPUTS)) {
-                    outPutsController.handle(message);
-                    return;
-                }
-
-                if (users.getStep().equals(Step.RESIDUAL)) {
-                    profitController.handle(message);
-                    return;
-                }
-
-                if (users.getStep().equals(Step.COUNT)) {
-                    patientCountController.handle(message);
-                    return;
-                }
-
-                if (users.getStep().equals(Step.ADMIN)) {
-                    addAdminController.handle(message);
-
-                }
-
-
-            } else {
-                myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                        "not action"));
+            if (text.equals("/start") || users.getStep() == null) {
+                menuController.mainMenu(message);
+                users.setStep(Step.MAIN);
             }
+
+            if (users.getStep().equals(Step.MAIN)) {
+
+                switch (text) {
+
+
+                    case Constant.kirim -> {
+
+                        //krimlar
+                        menuController.inputsMenu(message);
+                        users.setStep(Step.INPUTS);
+
+                        return;
+                    }
+
+                    case Constant.chiqim -> {
+                        //chiqimlar
+                        menuController.outPutsMenu(message);
+                        users.setStep(Step.OUTPUTS);
+                        return;
+                    }
+
+                    case Constant.qoldiq -> {
+                        //qoldiqlar
+
+                        menuController.qoldiqMenu(message);
+                        users.setStep(Step.RESIDUAL);
+                        return;
+                    }
+
+                    case Constant.bemorQidirish -> {
+
+                        menuController.searchPatient(message);
+                        users.setStep(Step.SEARCHPATIENT);
+                    }
+
+                    case Constant.bemorlarSoni -> {
+                        //bemorlar soni
+                        menuController.countSick(message);
+                        users.setStep(Step.COUNT);
+                        return;
+                    }
+
+                    case Constant.adminMenu -> {
+                        //adminMenu
+                        menuController.addAdminMenu(message);
+                        users.setStep(Step.ADMIN);
+
+                        return;
+                    }
+                }
+                return;
+            }
+
+
+            //kirimlar ************************
+            if (users.getStep().equals(Step.INPUTS)) {
+
+                inputsController.handle(message);
+                return;
+
+            }
+
+
+            //   chiqimlar ***********************************************
+
+
+            if (users.getStep().equals(Step.OUTPUTS)) {
+                outPutsController.handle(message);
+                return;
+            }
+
+            if (users.getStep().equals(Step.RESIDUAL)) {
+                profitController.handle(message);
+                return;
+            }
+
+            if (users.getStep().equals(Step.COUNT)) {
+                patientCountController.handle(message);
+                return;
+            }
+
+            if (users.getStep().equals(Step.ADMIN)) {
+                addAdminController.handle(message);
+                return;
+            }
+
+            if (users.getStep().equals(Step.SEARCHPATIENT)) {
+                patientController.handle(message);
+                users.setStep(Step.MAIN);
+                return;
+            }
+
+
+        } else {
+            myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                    "not action"));
         }
+
     }
 
     public TelegramUsers saveUser(Long chatId) {

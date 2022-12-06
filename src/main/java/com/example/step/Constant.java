@@ -42,10 +42,12 @@ public interface Constant {
 
     String listNurse = "Xamshiralar ro'yxati 📃";
 
-    String addInput= "Kirimlarni kiritish";
-    String addOutput= "Chiqimlarni kiritish";
+    String addInput = "Kirimlarni kiritish";
+    String addOutput = "Chiqimlarni kiritish";
 
-
+    String bemorQoshish = "Bemor Qoshish";
+    String bemorOchirish = "Bemor O'chirish";
+    String bemorlarRoyhati = "Bemorlar Ro'yhati";
 
 
 }

@@ -1,6 +1,7 @@
 package com.example.mainController;
 
 import com.example.step.Constant;
+import com.example.step.Constants;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.Button;
 import com.example.util.SendMsg;
@@ -194,6 +195,9 @@ public class MainMenuController {
     }
 
 
+    public void searchPatient(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Qidirmoqchi bo'lgan Bemor Ismi va Familiyasini kiriting "));
 
-
+    }
 }

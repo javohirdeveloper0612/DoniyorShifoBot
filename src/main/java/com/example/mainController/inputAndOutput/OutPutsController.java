@@ -1,5 +1,7 @@
-package com.example.mainController;
+package com.example.mainController.inputAndOutput;
 
+import com.example.mainController.MainController;
+import com.example.mainController.MainMenuController;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;

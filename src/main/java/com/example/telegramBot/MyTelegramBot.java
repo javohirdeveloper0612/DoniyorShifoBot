@@ -3,13 +3,12 @@ package com.example.telegramBot;
 import com.example.config.BotConfig;
 import com.example.accountent.AccountentController;
 import com.example.admin.AdminController;
-import com.example.controller.NurseController;
-import com.example.entity.UsersEntity;
 import com.example.mainController.MainController;
+import com.example.nurse.NurseController;
 import com.example.service.UsersService;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
-import com.example.util.SendMsg;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
@@ -21,7 +20,6 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Component
@@ -38,7 +36,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
 
-    public MyTelegramBot(BotConfig botConfig, MainController mainController, AdminController adminController, NurseController nurseController, AccountentController accountentController, UsersService usersService) {
+    public MyTelegramBot(@Lazy BotConfig botConfig, @Lazy MainController mainController, @Lazy AdminController adminController, @Lazy NurseController nurseController, @Lazy AccountentController accountentController, @Lazy UsersService usersService) {
         this.botConfig = botConfig;
         this.mainController = mainController;
         this.adminController = adminController;
@@ -50,49 +48,49 @@ public class MyTelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-
         Long userId = update.getMessage().getFrom().getId();
+        TelegramUsers telegramUsers = saveUser(userId);
 
         Message message = update.getMessage();
 
-        if (userId == 191794566) {
-            mainController.handle(update);
+        if (userId == 1024661500) {
+            mainController.handle(message);
             return;
         }
 
-        usersService.checkPasssword(message);
-        TelegramUsers telegramUsers = saveUser(userId);
-        telegramUsers.setStep(Step.CHECKPASSWORD);
+        boolean check = false;
+        boolean password;
+        if (message.getText().equals("/start")) {
+            usersService.checkPasssword(message);
+            telegramUsers.setStep(Step.CHECKPASSWORD);
+            check = true;
+            return;
+        }
 
         if (telegramUsers.getStep().equals(Step.CHECKPASSWORD)) {
-
-            boolean password = usersService.getByPassword(message);
-
+            if (check) {
+                password = usersService.getByPassword(message);
+            } else {
+                password = true;
+            }
             if (password) {
-
                 String role = usersService.getUserId(userId);
-
                 if (role != null) {
-
                     if (role.equals("NURSE")) {
                         nurseController.handle(message);
+
                         return;
                     }
-
                     if (role.equals("ACCOUNTENT")) {
                         accountentController.handle(message);
                         return;
                     }
-
                     if (role.equals("ADMIN")) {
                         adminController.handle(message);
                     }
-
                 }
             } else {
-
                 usersService.sendErrorPassword(message);
-
             }
         }
 

@@ -1,8 +1,11 @@
 package com.example.mainController;
 
+import com.example.service.PatientService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
+import com.example.telegramBot.MyTelegramBot;
+import com.example.util.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -21,6 +24,10 @@ public class PatientCountController {
     @Autowired
     private MainController mainController;
 
+    @Autowired
+    private PatientService patientService;
+    @Autowired
+    private MyTelegramBot myTelegramBot;
 
     public void handle(Message message) {
 
@@ -38,10 +45,19 @@ public class PatientCountController {
             switch (text) {
                 case Constant.qavat_2 -> {
                     //dataBasedan 2 chi qavat dagi barcha bemorlar soni
+
+                    Integer count = patientService.getCountFloor("2");
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "2⃣-qavatda Bemorlar soni: " + count));
                 }
 
                 case Constant.qavat_3 -> {
                     //dataBasedan 3 chi qavat dagi barcha bemorlar soni
+                    Integer count = patientService.getCountFloor("3");
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "3⃣-qavatda Bemorlar soni: " + count));
                 }
 
                 case Constant.backToMenu -> {
@@ -49,7 +65,9 @@ public class PatientCountController {
                     users.setStep(Step.MAIN);
                 }
             }
+
         }
+
 
     }
 
