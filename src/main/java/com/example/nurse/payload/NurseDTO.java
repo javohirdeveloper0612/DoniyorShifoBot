@@ -1,4 +1,4 @@
-package com.example.nurse;
+package com.example.nurse.payload;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +7,7 @@ import lombok.Setter;
 
 public class NurseDTO {
 
-    private Integer id;
+    private Long id;
     private String fullName;
     private String phone;
     private String floor;

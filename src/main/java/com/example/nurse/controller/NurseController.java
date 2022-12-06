@@ -1,34 +1,31 @@
-package com.example.nurse;
+package com.example.nurse.controller;
+
+import com.example.mainController.PatientController;
+import com.example.nurse.payload.NurseDTO;
+import com.example.nurse.service.NurseService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
-import com.example.util.Button;
-import com.example.util.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class NurseController {
-
     private List<TelegramUsers> usersList = new ArrayList<>();
     @Autowired
-    private MyTelegramBot myTelegramBot;
-
-    @Autowired
     private NurseService nurseService;
-
+    NurseDTO dto = new NurseDTO();
 
     public void handleNurse(Message message) {
 
         TelegramUsers step = saveUser(message.getChatId());
         String text = message.getText();
 
-        NurseDTO dto = new NurseDTO();
-        creationPatient(dto);
 
         if (text.equals("/start") || step.getStep() == null) {
             nurseService.nurseMenuButton(message);
@@ -41,23 +38,28 @@ public class NurseController {
             switch (text) {
 
                 case Constant.bemorQoshish -> {
-
                     nurseService.enterFullName(message);
                     step.setStep(Step.PATIENTFULLNAME);
                     return;
-
                 }
 
                 case Constant.bemorQidirish -> {
-
-
+                    nurseService.searchPatientNameAndSurname(message);
+                    step.setStep(Step.SEARCHPATIENT);
+                    return;
                 }
+
                 case Constant.bemorOchirish -> {
-
-
+                    nurseService.deletePatientById(message);
+                    step.setStep(Step.DELETEDPATIENT);
+                    return;
                 }
+
                 case Constant.bemorlarRoyhati -> {
 
+                    nurseService.patientRoyxati(message);
+                    step.setStep(Step.PATIENYEXCEL);
+                    return;
 
                 }
 
@@ -77,9 +79,12 @@ public class NurseController {
             }
 
             case PATIENTPHONE -> {
-                dto.setPhone(text);
-                nurseService.enterFloor(message);
-                step.setStep(Step.PATIENTFLOOR);
+                boolean checkphone = nurseService.checkPhone(message);
+                if (checkphone) {
+                    dto.setPhone(text);
+                    nurseService.enterFloor(message);
+                    step.setStep(Step.PATIENTFLOOR);
+                }
             }
 
             case PATIENTFLOOR -> {
@@ -93,16 +98,42 @@ public class NurseController {
                 dto.setRoom(text);
                 nurseService.endPatientRegistration(message);
                 nurseService.nurseMenuButton2(message);
+                step.setStep(Step.START);
+                nurseService.creationPatient(dto);
             }
 
         }
 
-    }
+        //************************** SEARCH PATIENT *******************************************
+
+        if (step.getStep().equals(Step.SEARCHPATIENT)) {
+            nurseService.handlePatient(message);
+            nurseService.nurseMenuButton2(message);
+            step.setStep(Step.START);
+        }
+
+        //************************* PATIENT DELETE ******************************************
+
+        if (step.getStep().equals(Step.DELETEDPATIENT)) {
+
+            boolean deleted = nurseService.deletedById(message);
+            if (deleted) {
+                nurseService.enddeletedPatient(message);
+                nurseService.nurseMenuButton2(message);
+                step.setStep(Step.START);
+            }
+        }
+
+        //*************************** PATIENT EXCEL **************************************
+
+        if ( step.getStep().equals(Step.PATIENYEXCEL)){
 
 
-    public void creationPatient(NurseDTO dto) {
-        nurseService.creationPatient(dto);
+        }
+
+        //******************************************************************************
     }
+
 
     public TelegramUsers saveUser(Long chatId) {
 

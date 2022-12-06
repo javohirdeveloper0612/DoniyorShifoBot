@@ -45,9 +45,9 @@ public interface Constant {
     String addInput = "Kirimlarni kiritish";
     String addOutput = "Chiqimlarni kiritish";
 
-    String bemorQoshish = "Bemor Qoshish";
-    String bemorOchirish = "Bemor O'chirish";
-    String bemorlarRoyhati = "Bemorlar Ro'yhati";
+    String bemorQoshish = "Bemor Qoshish  ✅";
+    String bemorOchirish = "Bemor O'chirish  \uD83D\uDDD1";
+    String bemorlarRoyhati = "Bemorlar Ro'yhati  \uD83D\uDCCA";
 
 
 }
