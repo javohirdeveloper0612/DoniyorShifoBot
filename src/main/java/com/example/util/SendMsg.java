@@ -1,5 +1,6 @@
 package com.example.util;
 
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
@@ -51,5 +52,12 @@ public class SendMsg {
         sendMessage.setText(text);
         sendMessage.setParseMode("Markdown");
         return sendMessage;
+    }
+    public static SendDocument sendpatientDoc(Long id, InputFile inputFile) {
+
+        SendDocument sendDocument = new SendDocument();
+        sendDocument.setChatId(id);
+        sendDocument.setDocument(inputFile);
+        return sendDocument;
     }
 }

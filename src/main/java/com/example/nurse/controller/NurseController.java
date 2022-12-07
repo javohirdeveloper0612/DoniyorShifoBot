@@ -51,9 +51,8 @@ public class NurseController {
                 }
 
                 case Constant.bemorlarRoyhati -> {
-
-                    nurseService.patientRoyxati(message);
-                    step.setStep(Step.PATIENYEXCEL);
+                    nurseService.patientList(message);
+                    step.setStep(Step.START);
                     return;
 
                 }
@@ -117,13 +116,6 @@ public class NurseController {
                 nurseService.nurseMenuButton2(message);
                 step.setStep(Step.START);
             }
-        }
-
-        //*************************** PATIENT EXCEL **************************************
-
-        if ( step.getStep().equals(Step.PATIENYEXCEL)){
-
-
         }
 
         //******************************************************************************
