@@ -3,15 +3,25 @@ package com.example.admin.service;
 
 import com.example.entity.UsersEntity;
 import com.example.enums.Status;
+import com.example.enums.UserRole;
 import com.example.repository.UsersRepository;
 import com.example.step.Constant;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.Button;
 import com.example.util.SendMsg;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.io.*;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeMap;
 
 @Service
 public class NurseServiceAdmin {
@@ -116,5 +126,69 @@ public class NurseServiceAdmin {
             }
         }
 
+    }
+
+    public void nurseList(Message message) {
+        boolean check = false;
+
+        Iterable<UsersEntity> nurseList = usersRepository.findAllByRole(UserRole.NURSE);
+
+        Map<Long, Object[]> accountData = new TreeMap<Long, Object[]>();
+        accountData.put(0L, new Object[]{"ID raqami ", "Ismi va familiyasi", "Telefon raqami",
+                "Parol", "Lavozimi", "Holati"});
+
+        for (UsersEntity accountent : nurseList) {
+            if (accountent != null) {
+                check = true;
+                XSSFWorkbook workbook = new XSSFWorkbook();
+                XSSFSheet spreadsheet = workbook.createSheet("Xamshiralar ro`yxati");
+                XSSFRow row;
+                accountData.put(accountent.getId(), new Object[]{accountent.getId().toString(), accountent.getFullName(),
+                        accountent.getPhone(), accountent.getPassword(), accountent.getRole().toString(), accountent.getStatus().toString()});
+                Set<Long> keyid = accountData.keySet();
+
+                int rowid = 0;
+                for (Long key : keyid) {
+                    row = spreadsheet.createRow(rowid++);
+                    Object[] objectArr = accountData.get(key);
+                    int cellid = 0;
+
+                    for (Object obj : objectArr) {
+                        Cell cell = row.createCell(cellid++);
+                        cell.setCellValue((String) obj);
+                    }
+
+                }
+
+                try {
+
+                    FileOutputStream out = new FileOutputStream("xamshiralar ro`yxati.xlsx");
+                    workbook.write(out);
+                    out.close();
+
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        if (!check) {
+
+            myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
+                    "*Xamshiralar ro'yxati mavjud emas*",
+                    Button.markup(Button.rowList(Button.row(Button.button(Constant.backToMenu))))));
+        } else {
+            try {
+                InputStream inputStream = new FileInputStream("xamshiralar ro`yxati.xlsx");
+                InputFile inputFile = new InputFile();
+                inputFile.setMedia(inputStream, "xamshiralar ro`yxati.xlsx");
+
+                myTelegramBot.send(SendMsg.sendDoc(message.getChatId(), inputFile,
+                        Button.markup(Button.rowList(Button.row(Button.button(Constant.backToMenu))))));
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.example.admin.service;
 
 import com.example.entity.UsersEntity;
 import com.example.enums.Status;
+import com.example.enums.UserRole;
 import com.example.repository.UsersRepository;
 import com.example.step.Constant;
 import com.example.telegramBot.MyTelegramBot;
@@ -119,7 +120,7 @@ public class AccountentServiceAdmin {
     public void accountentList(Message message) {
         boolean check = false;
 
-        Iterable<UsersEntity> accountentList = usersRepository.findAll();
+        Iterable<UsersEntity> accountentList = usersRepository.findAllByRole(UserRole.ACCOUNTENT);
 
         Map<Long, Object[]> accountData = new TreeMap<Long, Object[]>();
         accountData.put(0L, new Object[]{"ID raqami ", "Kassirning ismi va familiyasi", "Kassirning telefon raqami",

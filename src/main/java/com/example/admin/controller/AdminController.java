@@ -84,7 +84,8 @@ public class AdminController {
                 }
 
                 case Constant.listNurse -> {
-
+                    nurseService.nurseList(message);
+                    return;
                 }
 
                 case Constant.backToMenu -> {
