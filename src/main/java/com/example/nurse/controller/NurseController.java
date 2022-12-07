@@ -54,14 +54,13 @@ public class NurseController {
                     nurseService.patientList(message);
                     step.setStep(Step.START);
                     return;
-
                 }
 
             }
 
         }
 
-        //***************************** BEMOR REGISTRATSIYA **************************************
+        //***************************** PATIENT REGISTRATION **************************************
 
 
         switch (step.getStep()) {

@@ -51,46 +51,48 @@ public class NurseService {
         return true;
     }
     public void enterFullName(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning  Ism va Familyasini kiriting  ⬇️ "));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Bemorning  *Ism va Familyasini* kiriting  ⬇️ "));
     }
     public void enterPhone(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning telefon raqamini kiriting \n" +
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Bemorning *telefon* raqamini kiriting \n" +
                 "Masalan : ( +998951024055 )  ⬇️"));
     }
     public void enterFloor(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning yotgan qavatni kiriting \n" +
-                "Masalan : ( 1 - qavat )  ⬇️"));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Bemorning yotgan *qavatni* kiriting \n" +
+                "Masalan : ( 1-qavat )  ⬇️"));
     }
     public void enterHouse(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorning yotgan xona raqamini kiriting \n" +
-                "Masalan : ( 23 - xona )  ⬇️"));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Bemorning yotgan *xona* raqamini kiriting \n" +
+                "Masalan : ( 23-xona )  ⬇️"));
     }
     public void endPatientRegistration(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemor Qabul qilindi  ✅️"));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "*Bemor Qabul qilindi*  ✅️"));
     }
     public void searchPatientNameAndSurname(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorni topish uchun bemorning Ism va Familyasini kiriting  ⬇️ "));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Bemorni topish uchun bemorning *Ism va Familyasini* kiriting  ⬇️ "));
     }
-    public void  deletePatientById(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Bemorni o'chirish uchun bemorning ID" +
-                "raqamini kiriting  ⬇ ( ID raqamni bilish uchun bemorlar royhati bo'limini" +
-                "  ko'rishingiz mumkun  ✅️ "));
+    public void   deletePatientById(Message message) {
+
+            myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Bemorni o'chirish uchun bemorning *ID*" +
+                    "raqamini kiriting  ⬇ ( ID raqamni bilish uchun bemorlar royhati bo'limini" +
+                    "  ko'rishingiz mumkun  ✅️ "));
+
     }
     public void nurseMenuButton(Message message) {
 
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), " Registratsiya Bo'limi  ✅ : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), " *Registratsiya Bo'limi*  ✅ : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
     }
     public void nurseMenuButton2(Message message) {
 
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Keyingi amalni bajarishingiz mumkun  ✅ : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "*Keyingi amalni bajarishingiz mumkun*  ✅ : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
     }
     public boolean handlePatient(Message message) {
 
         List<PatientEntity> entityList = patientRepository.getByFullNameIgnoreCase(message.getText());
 
         if (entityList.isEmpty()) {
-            myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Kechirasiz bemor topilmadi Bunaqa " +
-                    "bemor bemorlar royhatida  mavjud emas bemorlar ro'yhatini qarab ko'ring ❌"));
+            myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Kechirasiz bemor topilmadi bemorlar " +
+                    "*Ro'yxatini* qarab ko'ring  ❌"));
             return false;
         } else {
 
@@ -136,11 +138,21 @@ public class NurseService {
     }
     public boolean deletedById(Message message) {
 
+        String text = message.getText();
+
+        for (int i = 0; i < text.length(); i++) {
+            if(!Character.isDigit(text.charAt(i)) || Character.isLetter(text.charAt(i)) ){
+                myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
+                        "*ID da harf yoki belgi bo'lishi mumkin emas raqam kiriting*  ❌"));
+                return false;
+            }
+        }
+
         Long id = Long.valueOf(message.getText());
         Optional<PatientEntity> optional = patientRepository.findById(id);
 
         if (optional.isEmpty()) {
-            myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Kechirasiz bunaqa ID mavjud emas !" +
+            myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Kechirasiz bunaqa *ID* mavjud emas !" +
                     "boshqatan kiriting   ⬇️"));
             return false;
 
