@@ -8,7 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface PatientRepository extends CrudRepository<PatientEntity, Long> {
-    List<PatientEntity> getByFullNameIgnoreCase(String name);
+    List<PatientEntity> getByFullNameIgnoreCaseAndStatus(String name,Status status);
     Integer countByFloor(String floor);
     List<PatientEntity> findAllByStatus(Status status);
+    List<PatientEntity> getByFullNameIgnoreCase(String name);
 }

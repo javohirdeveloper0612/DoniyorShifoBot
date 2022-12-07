@@ -6,7 +6,6 @@ import com.example.step.Step;
 import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -66,6 +65,7 @@ public class MainController {
                     case Constant.kirim -> {
 
                         //krimlar
+
                         menuController.inputsMenu(message);
                         users.setStep(Step.INPUTS);
 
@@ -73,13 +73,16 @@ public class MainController {
                     }
 
                     case Constant.chiqim -> {
+
                         //chiqimlar
+
                         menuController.outPutsMenu(message);
                         users.setStep(Step.OUTPUTS);
                         return;
                     }
 
                     case Constant.qoldiq -> {
+
                         //qoldiqlar
 
                         menuController.qoldiqMenu(message);
@@ -96,14 +99,18 @@ public class MainController {
                     }
 
                     case Constant.bemorlarSoni -> {
+
                         //bemorlar soni
+
                         menuController.countSick(message);
                         users.setStep(Step.COUNT);
                         return;
                     }
 
                     case Constant.adminMenu -> {
+
                         //adminMenu
+
                         menuController.addAdminMenu(message);
                         users.setStep(Step.ADMIN);
 
