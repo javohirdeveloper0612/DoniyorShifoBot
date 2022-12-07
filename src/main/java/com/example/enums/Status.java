@@ -1,5 +1,5 @@
 package com.example.enums;
 
-public enum PatientStatus {
+public enum Status {
     BLOCK, ACTIVE
 }
