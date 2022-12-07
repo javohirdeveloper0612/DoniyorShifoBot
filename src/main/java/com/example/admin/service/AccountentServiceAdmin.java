@@ -12,7 +12,6 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.objects.File;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -20,12 +19,12 @@ import java.io.*;
 import java.util.*;
 
 @Service
-public class AccountentService {
+public class AccountentServiceAdmin {
 
     private final MyTelegramBot myTelegramBot;
     private final UsersRepository usersRepository;
 
-    public AccountentService(MyTelegramBot myTelegramBot, UsersRepository usersRepository) {
+    public AccountentServiceAdmin(MyTelegramBot myTelegramBot, UsersRepository usersRepository) {
         this.myTelegramBot = myTelegramBot;
         this.usersRepository = usersRepository;
     }

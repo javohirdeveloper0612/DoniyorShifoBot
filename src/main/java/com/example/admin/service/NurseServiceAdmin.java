@@ -14,14 +14,14 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import java.util.Optional;
 
 @Service
-public class NurseService {
+public class NurseServiceAdmin {
 
     private final MyTelegramBot myTelegramBot;
 
     private final UsersRepository usersRepository;
 
 
-    public NurseService(MyTelegramBot myTelegramBot, UsersRepository usersRepository) {
+    public NurseServiceAdmin(MyTelegramBot myTelegramBot, UsersRepository usersRepository) {
         this.myTelegramBot = myTelegramBot;
 
         this.usersRepository = usersRepository;

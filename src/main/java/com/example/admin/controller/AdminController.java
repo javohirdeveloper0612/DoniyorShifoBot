@@ -1,7 +1,7 @@
 package com.example.admin.controller;
 
-import com.example.admin.service.AccountentService;
-import com.example.admin.service.NurseService;
+import com.example.admin.service.AccountentServiceAdmin;
+import com.example.admin.service.NurseServiceAdmin;
 import com.example.entity.UsersEntity;
 import com.example.enums.UserRole;
 import com.example.repository.UsersRepository;
@@ -21,8 +21,8 @@ import java.util.List;
 public class AdminController {
 
     private final MyTelegramBot myTelegramBot;
-    private final AccountentService accountentService;
-    private final NurseService nurseService;
+    private final AccountentServiceAdmin accountentService;
+    private final NurseServiceAdmin nurseService;
 
     private final UsersRepository userRepository;
     private UsersEntity nurseDTO = new UsersEntity();
@@ -30,7 +30,7 @@ public class AdminController {
 
     private List<TelegramUsers> usersList = new ArrayList<>();
 
-    public AdminController(AccountentService accountentService, MyTelegramBot myTelegramBot, NurseService nurseService, UsersRepository userRepository) {
+    public AdminController(AccountentServiceAdmin accountentService, MyTelegramBot myTelegramBot, NurseServiceAdmin nurseService, UsersRepository userRepository) {
         this.accountentService = accountentService;
         this.myTelegramBot = myTelegramBot;
         this.nurseService = nurseService;
