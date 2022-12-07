@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,7 +69,6 @@ public class NurseService {
                 "raqamini kiriting  ⬇ ( ID raqamni bilish uchun bemorlar royhati bo'limini" +
                 "  ko'rishingiz mumkun  ✅️ "));
     }
-
     public void patientRoyxati(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Doniyor Shifo Klinikasidagi bemorlar ro'yxati  ⬇️ "));
     }
@@ -80,37 +80,41 @@ public class NurseService {
 
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Keyingi amalni bajarishingiz mumkun  ✅ : ", Button.markup(Button.rowList(Button.row(Button.button(Constant.bemorQoshish), Button.button(Constant.bemorQidirish)), Button.row(Button.button(Constant.bemorOchirish), Button.button(Constant.bemorlarRoyhati))))));
     }
-    public void handlePatient(Message message) {
+    public boolean handlePatient(Message message) {
 
-        List<PatientDTO> dtoList = getByFullName(message.getText());
+        List<PatientEntity> entityList = patientRepository.getByFullNameIgnoreCase(message.getText());
 
-        if (dtoList != null) {
+        if (entityList.isEmpty()) {
+            myTelegramBot.send(SendMsg.sendMsg(message.getChatId(), "Kechirasiz bemor topilmadi Bunaqa " +
+                    "bemor bemorlar royhatida  mavjud emas bemorlar ro'yhatini qarab ko'ring ❌"));
+            return false;
+        } else {
 
-            for (PatientDTO dto : dtoList) {
+            List<NurseDTO> dtoList = new LinkedList<>();
+
+
+            for (PatientEntity entity : entityList) {
+                NurseDTO nurseDTO = new NurseDTO();
+                nurseDTO.setId(entity.getId());
+                nurseDTO.setFullName(entity.getFullName());
+                nurseDTO.setPhone(entity.getPhone());
+                nurseDTO.setFloor(entity.getFloor());
+                nurseDTO.setRoom(entity.getRoom());
+                nurseDTO.setCreated_date(entity.getCreatedDate());
+                dtoList.add(nurseDTO);
+            }
+
+            for (NurseDTO dto : dtoList) {
                 myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                         "Ismi: " + dto.getFullName() + "\n\n" +
                                 "\uD83D\uDED7 Qavati: " + dto.getFloor() + "\n\n" +
                                 "\uD83C\uDFD8 Xona raqami: " + dto.getRoom() + "\n\n" +
                                 "☎ Telefon raqami: " + dto.getPhone() + "\n\n" +
-                                "\uD83D\uDCC5 Kelgan kuni: " + dto.getCreatedDate()));
+                                "\uD83D\uDCC5 Kelgan kuni: " + dto.getCreated_date()));
             }
 
         }
-    }
-    public List<PatientDTO> getByFullName(String name) {
-
-        List<PatientDTO> dtoList = new ArrayList<>();
-
-        List<PatientEntity> entityList = patientRepository.getByFullNameIgnoreCase(name);
-
-        if (entityList == null) {
-            return null;
-        }
-
-        entityList.forEach(patientEntity -> dtoList.add(toDTO(patientEntity)));
-
-
-        return dtoList;
+        return true;
     }
     public PatientDTO toDTO(PatientEntity entity) {
         PatientDTO dto = new PatientDTO();
