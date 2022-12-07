@@ -13,4 +13,5 @@ public interface InputsRepository extends CrudRepository<InputEntity, Integer> {
 
     List<InputEntity> getByCreatedDateBetweenOrderByCreatedDateDesc(LocalDate before, LocalDate after);
 
+    Optional<InputEntity> findByCreatedDate(LocalDate now);
 }
