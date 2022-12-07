@@ -1,10 +1,9 @@
-package com.example.mainController.inputAndOutput;
+package com.example.owner.mainController.inputAndOutput;
 
-import com.example.dto.InputDTO;
 import com.example.dto.OutputsDTO;
-import com.example.mainController.MainController;
-import com.example.mainController.MainMenuController;
-import com.example.service.OutputsService;
+import com.example.owner.mainController.MainController;
+import com.example.owner.mainController.MainMenuController;
+import com.example.owner.service.OutputsService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -238,7 +237,7 @@ public class OutPutsController {
                     // kiritilgan sana buyicha kirimlar
 
                     myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiritig: masalan (2022-12-12)",
+                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiriting: masalan (2022-12-12)",
                             Button.markup(Button.rowList(Button.row(
                                     Button.button(Constant.backToMenu)
                             )))));

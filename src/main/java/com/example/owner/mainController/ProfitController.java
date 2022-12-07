@@ -1,9 +1,9 @@
-package com.example.mainController.inputAndOutput;
+package com.example.owner.mainController;
 
-import com.example.dto.InputDTO;
-import com.example.mainController.MainController;
-import com.example.mainController.MainMenuController;
-import com.example.service.InputsService;
+import com.example.dto.OutputsDTO;
+import com.example.dto.ProfitDTO;
+import com.example.owner.ProfitMapper;
+import com.example.owner.service.ProfitService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -19,24 +19,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class InputsController {
+public class ProfitController {
+
 
     private final MainMenuController menuController;
 
-    private final MyTelegramBot myTelegramBot;
 
     private final MainController mainController;
 
-    private final InputsService service;
+    private final ProfitService service;
+
+
+    private final MyTelegramBot myTelegramBot;
+
 
     private List<TelegramUsers> usersList = new ArrayList<>();
 
     @Lazy
-    public InputsController( MainMenuController menuController, MyTelegramBot myTelegramBot, MainController mainController, InputsService service) {
+    public ProfitController(MainMenuController menuController, MainController mainController, ProfitService service, MyTelegramBot myTelegramBot) {
         this.menuController = menuController;
-        this.myTelegramBot = myTelegramBot;
         this.mainController = mainController;
         this.service = service;
+        this.myTelegramBot = myTelegramBot;
     }
 
 
@@ -45,35 +49,35 @@ public class InputsController {
 
         TelegramUsers users = mainController.saveUser(message.getChatId());
 
-        TelegramUsers inPuts = saveUser(message.getChatId());
+        TelegramUsers residual = saveUser(message.getChatId());
 
 
         String text = message.getText();
 
-        if (inPuts.getStep() == null) {
-            inPuts.setStep(Step.INPUTS);
+        if (residual.getStep() == null) {
+            residual.setStep(Step.RESIDUAL);
         }
 
-        if (inPuts.getStep().equals(Step.INPUTS)) {
+        if (residual.getStep().equals(Step.RESIDUAL)) {
 
 
             switch (text) {
                 case Constant.naxd -> {
                     //naxd
-                    menuController.naxdKirimMenu(message);
-                    inPuts.setStep(Step.NAXDIN);
+                    menuController.naxqQoldilar(message);
+                    residual.setStep(Step.NAXD);
                 }
 
                 case Constant.plastik -> {
                     //plastik
-                    menuController.plastikKirimMenu(message);
-                    inPuts.setStep(Step.PLASTIKIN);
+                    menuController.plastikQoldilar(message);
+                    residual.setStep(Step.PLASTIK);
                 }
 
                 case Constant.umumiyBlance -> {
                     //umumiy
-                    menuController.totalAmount(message);
-                    inPuts.setStep(Step.TOTALAMOUNTINPUTS);
+                    menuController.totalResidualOutputs(message);
+                    residual.setStep(Step.TOTALAMOUNTINPUTS);
                 }
 
 
@@ -83,150 +87,25 @@ public class InputsController {
                 }
             }
 
-            return;
-
         }
 
 
-        if (inPuts.getStep().equals(Step.NAXDIN)) {
+        if (residual.getStep().equals(Step.NAXD)) {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
+                    ProfitMapper mapper = service.getByCreated_date(LocalDate.now());
 
-                    InputDTO dto = service.getInputCashByCreatedDate();
-
-                    if (dto == null) {
+                    if (mapper == null) {
                         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Bugun hisobidan kirimlar kiritilmagan !"));
-                        return;
-                    }
-
-                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "Sana: " + dto.getCreatedDate() + "\n\n" +
-                                    "\uD83D\uDCB5 Naxd kirimlar miqdori = " + dto.getCash() + " so'm\n"
-                    ));
-                    inPuts.setStep(Step.NAXDIN);
-
-                }
-
-                case Constant.kun10 -> {
-                    //10 kunlikni hisoblab chiqarish
-
-
-                    List<InputDTO> dtoList =service.getInputLast10(LocalDate.now());
-
-                    if (dtoList == null){
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Hozirgacha 10 kunlik hisobotlar mavjud emas ! ⚠"));
-                        return;
-                    }
-                    for (InputDTO dto : dtoList) {
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Sana: "+dto.getCreatedDate()+"\n" +
-                                        "\uD83D\uDCB5 Naxd Summa: "+dto.getCash()+" so'm \n"));
-                    }
-
-
-                }
-
-                case Constant.kunBuyicha -> {
-                    // kiritilgan sana buyicha kirimlar
-
-                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiritig: masalan (2022-12-12)",
-                            Button.markup(Button.rowList(Button.row(
-                                    Button.button(Constant.backToMenu)
-                            )))));
-                    inPuts.setStep(Step.SEARCHDAYNAXD);
-                }
-
-                case Constant.backToMenu -> {
-
-                    menuController.inputsMenu(message);
-
-                    inPuts.setStep(Step.INPUTS);
-                }
-            }
-            return;
-        }
-
-        if (inPuts.getStep().equals(Step.PLASTIKIN)) {
-            switch (text) {
-                case Constant.bugungi -> {
-                    // bugungilarni chiqramiz dataBaseda olinadi
-
-                    InputDTO dto = service.getInputCardByCreatedDate();
-
-                    if (dto == null) {
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Bugun hisobidan kirimlar kiritilmagan !"));
-                        return;
-                    }
-
-                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "Sana: " + dto.getCreatedDate() + "\n\n" +
-                                    "\uD83D\uDCB3 Plastik kirimlar miqdori = " + dto.getCard() + " so'm\n"
-                    ));
-
-                }
-
-                case Constant.kun10 -> {
-                    //10 kunlikni hisoblab chiqarish
-
-
-                    List<InputDTO> dtoList =service.getInputLast10(LocalDate.now());
-
-                    if (dtoList == null){
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Hozirgacha 10 kunlik hisobotlar mavjud emas ! ⚠"));
-                        return;
-                    }
-                    for (InputDTO dto : dtoList) {
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Sana: "+dto.getCreatedDate()+"\n" +
-                                        "\uD83D\uDCB5 Plastik Summa: "+dto.getCard()+" so'm \n"));
-                    }
-
-
-                }
-
-                case Constant.kunBuyicha -> {
-                    // kiritilgan sana buyicha kirimlar
-
-                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiritig: masalan (2022-12-12)",
-                            Button.markup(Button.rowList(Button.row(
-                                    Button.button(Constant.backToMenu)
-                            )))));
-                    inPuts.setStep(Step.SEARCHDAYPLASTIK);
-                }
-
-                case Constant.backToMenu -> {
-
-                    menuController.inputsMenu(message);
-                    inPuts.setStep(Step.INPUTS);
-                }
-            }
-            return;
-        }
-
-        if (inPuts.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
-            switch (text) {
-                case Constant.bugungi -> {
-                    // bugungilarni chiqramiz dataBaseda olinadi
-
-                    InputDTO dto = service.getInputCashByCreatedDate();
-
-                    if (dto == null) {
-                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Bugun hisobidan kirimlar kiritilmagan ! ❌"));
+                                "Bugun hisobidan hisobotlar kiritilmagan ! ❌"));
                         return;
                     }
 
 
                     myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "Sana: " + dto.getCreatedDate() + "\n\n" +
-                                    "\uD83D\uDCB5 Bugungi umumiy kirimlar miqdori = " + dto.getTotalAmount() +
+                            "Sana: " + mapper.getCreatedDate() + "\n\n" +
+                                    "\uD83D\uDCB5 Bugungi naxq qoldiqlar miqdori = " + mapper.getCash() +
                                     " so'm\n"
                     ));
 
@@ -235,55 +114,169 @@ public class InputsController {
                 case Constant.kun10 -> {
                     //10 kunlikni hisoblab chiqarish
 
-                    List<InputDTO> dtoList =service.getInputLast10(LocalDate.now());
+                    List<ProfitMapper> mappers = service.getLast10Profit(LocalDate.now());
 
-                    if (dtoList == null){
+
+                    if (mappers == null) {
                         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                                 "Hozirgacha 10 kunlik hisobotlar mavjud emas ! ⚠"));
                         return;
                     }
-                    for (InputDTO dto : dtoList) {
+                    for (ProfitMapper mapper : mappers) {
                         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                                "Sana: "+dto.getCreatedDate()+"\n" +
-                                        "\uD83D\uDCB5 Umimiy Summa: "+dto.getTotalAmount()+" so'm \n"));
+                                "Sana: " + mapper.getCreatedDate() + "\n" +
+                                        "\uD83D\uDCB5 Umimiy Summa: " + mapper.getCash() + " so'm \n"));
                     }
-
                 }
 
                 case Constant.kunBuyicha -> {
                     // kiritilgan sana buyicha kirimlar
 
-
                     myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiritig: masalan (2022-12-12)",
+                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiriting: masalan (2022-12-12)",
                             Button.markup(Button.rowList(Button.row(
                                     Button.button(Constant.backToMenu)
                             )))));
-                    inPuts.setStep(Step.SEARCHDAYTOTAL);
+                    residual.setStep(Step.SEARCHDAYNAXD);
+
                 }
 
                 case Constant.backToMenu -> {
 
                     menuController.inputsMenu(message);
-                    inPuts.setStep(Step.INPUTS);
+                    residual.setStep(Step.RESIDUAL);
                 }
-
             }
             return;
         }
 
-        switch (inPuts.getStep()) {
+        if (residual.getStep().equals(Step.PLASTIK)) {
+            switch (text) {
+                case Constant.bugungi -> {
+                    // bugungilarni chiqramiz dataBaseda olinadi
+                    ProfitMapper mapper = service.getByCreated_date(LocalDate.now());
+
+                    if (mapper == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Bugun hisobidan hisobotlar kiritilmagan ! ❌"));
+                        return;
+                    }
+
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Sana: " + mapper.getCreatedDate() + "\n\n" +
+                                    "\uD83D\uDCB5 Bugungi plastik qoldiqlar miqdori = " + mapper.getCard() +
+                                    " so'm\n"
+                    ));
+                }
+
+                case Constant.kun10 -> {
+                    //10 kunlikni hisoblab chiqarish
+
+                    List<ProfitMapper> mappers = service.getLast10Profit(LocalDate.now());
+
+
+                    if (mappers == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Hozirgacha 10 kunlik hisobotlar mavjud emas ! ⚠"));
+                        return;
+                    }
+                    for (ProfitMapper mapper : mappers) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Sana: " + mapper.getCreatedDate() + "\n" +
+                                        "\uD83D\uDCB5 Umimiy Summa: " + mapper.getCard() + " so'm \n"));
+                    }
+                }
+
+                case Constant.kunBuyicha -> {
+                    // kiritilgan sana buyicha kirimlar
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiriting: masalan (2022-12-12)",
+                            Button.markup(Button.rowList(Button.row(
+                                    Button.button(Constant.backToMenu)
+                            )))));
+                    residual.setStep(Step.SEARCHDAYPLASTIK);
+                }
+
+                case Constant.backToMenu -> {
+
+                    menuController.inputsMenu(message);
+                    residual.setStep(Step.RESIDUAL);
+                }
+            }
+            return;
+        }
+
+        if (residual.getStep().equals(Step.TOTALAMOUNTINPUTS)) {
+            switch (text) {
+                case Constant.bugungi -> {
+                    // bugungilarni chiqramiz dataBaseda olinadi
+
+                    ProfitMapper mapper = service.getByCreated_date(LocalDate.now());
+
+                    if (mapper == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Bugun hisobidan hisobotlar kiritilmagan ! ❌"));
+                        return;
+                    }
+
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Sana: " + mapper.getCreatedDate() + "\n\n" +
+                                    "\uD83D\uDCB5 Bugungi umumiy qoldiqlar miqdori = " + mapper.getTotal() +
+                                    " so'm\n"
+                    ));
+                }
+
+                case Constant.kun10 -> {
+                    //10 kunlikni hisoblab chiqarish
+
+                    List<ProfitMapper> mappers = service.getLast10Profit(LocalDate.now());
+
+
+                    if (mappers == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Hozirgacha 10 kunlik hisobotlar mavjud emas ! ⚠"));
+                        return;
+                    }
+                    for (ProfitMapper mapper : mappers) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Sana: " + mapper.getCreatedDate() + "\n" +
+                                        "\uD83D\uDCB5 Umimiy Summa: " + mapper.getTotal() + " so'm \n"));
+                    }
+                }
+
+                case Constant.kunBuyicha -> {
+                    // kiritilgan sana buyicha kirimlar
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "\uD83D\uDCC5 Qidirmoqchi bulgan sanani kiriting: masalan (2022-12-12)",
+                            Button.markup(Button.rowList(Button.row(
+                                    Button.button(Constant.backToMenu)
+                            )))));
+                    residual.setStep(Step.SEARCHDAYTOTAL);
+                }
+
+                case Constant.backToMenu -> {
+
+                    menuController.inputsMenu(message);
+                    residual.setStep(Step.RESIDUAL);
+                }
+            }
+            return;
+        }
+        switch (residual.getStep()) {
 
             case SEARCHDAYNAXD -> {
 
                 if (message.getText().equals(Constant.backToMenu)) {
-                    menuController.naxdKirimMenu(message);
-                    inPuts.setStep(Step.NAXDIN);
+                    menuController.naxqQoldilar(message);
+                    residual.setStep(Step.NAXD);
                     return;
                 }
 
-                if (sendSummaByDateNaxd(message)){
-                    inPuts.setStep(Step.NAXDIN);
+                if (sendSummaByDateNaxd(message)) {
+                    residual.setStep(Step.NAXD);
                 }
 
             }
@@ -291,33 +284,33 @@ public class InputsController {
             case SEARCHDAYPLASTIK -> {
                 if (message.getText().equals(Constant.backToMenu)) {
                     menuController.plastikKirimMenu(message);
-                    inPuts.setStep(Step.NAXDIN);
+                    residual.setStep(Step.NAXD);
                     return;
                 }
 
-                if (sendSummaByDatePlastik(message)){
+                if (sendSummaByDatePlastik(message)) {
 
-                    inPuts.setStep(Step.PLASTIKIN);
+                    residual.setStep(Step.PLASTIK);
                 }
             }
 
             case SEARCHDAYTOTAL -> {
                 if (message.getText().equals(Constant.backToMenu)) {
                     menuController.totalAmount(message);
-                    inPuts.setStep(Step.NAXDIN);
+                    residual.setStep(Step.NAXD);
                     return;
                 }
+                if (sendSummaByDateTotal(message)) {
 
-                if (sendSummaByDateTotal(message)){
-                    inPuts.setStep(Step.TOTALAMOUNTINPUTS);
+                    residual.setStep(Step.TOTALAMOUNTINPUTS);
                 }
-            }
 
+            }
         }
 
     }
 
-    public boolean sendSummaByDateNaxd(Message message){
+    public boolean sendSummaByDateNaxd(Message message) {
 
         LocalDate date = null;
 
@@ -333,24 +326,24 @@ public class InputsController {
         }
 
 
-        InputDTO dto = service.getInputByGivenDate(date);
+        ProfitMapper mapper = service.getByCreated_date(date);
 
-        if (dto == null) {
+        if (mapper == null) {
             myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                    "Kiritilgan sana boyicha kirimlar topilmadi ! \n ❌" +
+                    "Kiritilgan sana boyicha qoldiqlar topilmadi ! \n ❌" +
                             "🔁 Qaytadan kiriting ! "));
             return false;
         }
 
 
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                "Sana " + dto.getCreatedDate() + "\n\n" +
-                        "\uD83D\uDCB5 Naxd kirimlar miqdori = " + dto.getCash() +
+                "Sana " + mapper.getCreatedDate() + "\n\n" +
+                        "\uD83D\uDCB5 Naxd qoldiqlar miqdori = " + mapper.getCash() +
                         " so'm\n"));
         return true;
     }
 
-    public boolean sendSummaByDatePlastik(Message message){
+    public boolean sendSummaByDatePlastik(Message message) {
 
         LocalDate date = null;
 
@@ -366,24 +359,24 @@ public class InputsController {
         }
 
 
-        InputDTO dto = service.getInputByGivenDate(date);
+        ProfitMapper mapper = service.getByCreated_date(date);
 
-        if (dto == null) {
+        if (mapper == null) {
             myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                    "Kiritilgan sana boyicha kirimlar topilmadi ! \n ❌" +
+                    "Kiritilgan sana boyicha qoldiqlar topilmadi ! \n ❌" +
                             "🔁 Qaytadan kiriting ! "));
             return false;
         }
 
 
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                "Sana " + dto.getCreatedDate() + "\n\n" +
-                        "\uD83D\uDCB3 Plastik kirimlar miqdori = " + dto.getCard() +
+                "Sana " + mapper.getCreatedDate() + "\n\n" +
+                        "\uD83D\uDCB3 Plastik qoldiqlar miqdori = " + mapper.getCard() +
                         " so'm\n"));
         return true;
     }
 
-    public boolean sendSummaByDateTotal(Message message){
+    public boolean sendSummaByDateTotal(Message message) {
 
         LocalDate date = null;
 
@@ -399,19 +392,19 @@ public class InputsController {
         }
 
 
-        InputDTO dto = service.getInputByGivenDate(date);
+        ProfitMapper mapper = service.getByCreated_date(date);
 
-        if (dto == null) {
+        if (mapper == null) {
             myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                    "Kiritilgan sana boyicha kirimlar topilmadi ! \n ❌" +
+                    "Kiritilgan sana boyicha qoldiqlar topilmadi ! \n ❌" +
                             "🔁 Qaytadan kiriting ! "));
             return false;
         }
 
 
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                "Sana " + dto.getCreatedDate() + "\n\n" +
-                        "\uD83D\uDCB5 kundagi umimiy kirimlar miqdori = " + dto.getTotalAmount() +
+                "Sana " + mapper.getCreatedDate() + "\n\n" +
+                        "\uD83D\uDCB5 kundagi umimiy qoldiqlar miqdori = " + mapper.getTotal() +
                         " so'm\n"));
         return true;
     }
@@ -433,6 +426,5 @@ public class InputsController {
 
         return users;
     }
-
 
 }

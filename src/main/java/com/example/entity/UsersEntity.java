@@ -1,5 +1,6 @@
 package com.example.entity;
 
+import com.example.enums.Status;
 import com.example.enums.UserRole;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 public class UsersEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     private String fullName;
 
@@ -28,6 +29,9 @@ public class UsersEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Enumerated(EnumType.STRING)
+    private Status status = Status.ACTIVE;
 
 
 }

@@ -1,6 +1,6 @@
 package com.example.entity;
 
-import com.example.enums.PatientStatus;
+import com.example.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +27,7 @@ public class PatientEntity {
     private String room;
 
     @Enumerated(EnumType.STRING)
-    private PatientStatus status;
+    private Status status;
 
     @Column(name = "created_date")
     private LocalDate createdDate = LocalDate.now(ZoneId.of("Asia/Tashkent"));

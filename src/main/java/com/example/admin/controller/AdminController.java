@@ -4,7 +4,9 @@ import com.example.admin.service.AccountentServiceAdmin;
 import com.example.admin.service.NurseServiceAdmin;
 import com.example.entity.UsersEntity;
 import com.example.enums.UserRole;
-import com.example.repository.UsersRepository;
+import com.example.owner.mainController.MainController;
+import com.example.owner.mainController.MainMenuController;
+import com.example.owner.repository.UsersRepository;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -23,21 +25,28 @@ public class AdminController {
     private final MyTelegramBot myTelegramBot;
     private final AccountentServiceAdmin accountentService;
     private final NurseServiceAdmin nurseService;
+    private final MainController mainController;
 
     private final UsersRepository userRepository;
     private UsersEntity nurseDTO = new UsersEntity();
     private UsersEntity accountentDTO = new UsersEntity();
 
-    private List<TelegramUsers> usersList = new ArrayList<>();
+    private final MainMenuController menuController;
 
-    public AdminController(AccountentServiceAdmin accountentService, MyTelegramBot myTelegramBot, NurseServiceAdmin nurseService, UsersRepository userRepository) {
+    private final List<TelegramUsers> usersList = new ArrayList<>();
+
+    public AdminController(AccountentServiceAdmin accountentService, MyTelegramBot myTelegramBot, NurseServiceAdmin nurseService, MainController mainController, UsersRepository userRepository, MainMenuController menuController) {
         this.accountentService = accountentService;
         this.myTelegramBot = myTelegramBot;
         this.nurseService = nurseService;
+        this.mainController = mainController;
         this.userRepository = userRepository;
+        this.menuController = menuController;
     }
 
     public void handle(Message message) {
+
+        TelegramUsers step = mainController.saveUser(message.getChatId());
 
         TelegramUsers users = saveUser(message.getChatId());
 
@@ -89,8 +98,8 @@ public class AdminController {
                 }
 
                 case Constant.backToMenu -> {
-                    mainMenu(message);
-                    users.setStep(Step.MAIN);
+                    menuController.mainMenu(message);
+                    step.setStep(Step.MAIN);
                     return;
                 }
 
@@ -195,7 +204,7 @@ public class AdminController {
                 if (accountentId) {
                     users.setStep(Step.MAIN);
                 }
-                return;
+
             }
 
         }
@@ -211,7 +220,8 @@ public class AdminController {
                         Button.row(Button.button(Constant.deletAccountent),
                                 Button.button(Constant.deleteNurse)),
                         Button.row(Button.button(Constant.listAccountent),
-                                Button.button(Constant.listNurse))
+                                Button.button(Constant.listNurse)),
+                        Button.row(Button.button(Constant.backToMenu))
                 ))
         ));
     }

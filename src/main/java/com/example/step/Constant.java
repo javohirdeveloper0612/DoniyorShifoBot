@@ -1,8 +1,8 @@
 package com.example.step;
 
 public interface Constant {
-    String kirim = "Kirimlar \uD83D\uDCB5";
-    String chiqim = "Chiqimlar \uD83D\uDCB5";
+    String kirim = "Kirimlar \uD83D\uDCB5 ⬇";
+    String chiqim = "Chiqimlar \uD83D\uDCB5 ⬆";
     String qoldiq = "Qoldiq \uD83D\uDCC8";
     String bemorQidirish = "BemorQidirish \uD83D\uDD0E";
     String bemorlarSoni = "BemorlarSoni \uD83D\uDD0E";
@@ -17,9 +17,9 @@ public interface Constant {
 
     String backToMenu = "BackMenu \uD83D\uDD19";
 
-    String bugungi = "Bugungi Kirimlar";
-    String kunBuyicha = "Kun Buyicha Qidirish";
-    String kun10 = "10 Kunlik kirimlar";
+    String bugungi = "Bugungi 📃";
+    String kunBuyicha = "Kun Buyicha Qidirish 📃 \uD83D\uDCC5";
+    String kun10 = "10 Kunlik 📃";
 
     String qavat_1 = "1⃣-Qavat";
 
@@ -47,7 +47,7 @@ public interface Constant {
 
     String bemorQoshish = "Bemor Qoshish";
     String bemorOchirish = "Bemor O'chirish";
-    String bemorlarRoyhati = "Bemorlar Ro'yhati";
+    String bemorlarRoyhati = "Bemorlar Ro'yhati \uD83D\uDCDA";
 
 
 }

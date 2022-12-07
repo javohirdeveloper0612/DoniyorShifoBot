@@ -1,21 +1,25 @@
 package com.example.nurse.controller;
+
 import com.example.nurse.payload.NurseDTO;
 import com.example.nurse.service.NurseService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class NurseController {
-    private List<TelegramUsers> usersList = new ArrayList<>();
-    @Autowired
-    private NurseService nurseService;
+    private final List<TelegramUsers> usersList = new ArrayList<>();
+    private final NurseService nurseService;
     NurseDTO dto = new NurseDTO();
+
+    public NurseController(NurseService nurseService) {
+        this.nurseService = nurseService;
+    }
 
     public void handleNurse(Message message) {
 
@@ -101,7 +105,7 @@ public class NurseController {
 
         if (step.getStep().equals(Step.SEARCHPATIENT)) {
             boolean searchpatient = nurseService.handlePatient(message);
-            if(searchpatient){
+            if (searchpatient) {
                 nurseService.nurseMenuButton2(message);
                 step.setStep(Step.START);
             }

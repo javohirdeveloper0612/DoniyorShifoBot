@@ -1,8 +1,9 @@
-package com.example.mainController;
+package com.example.owner.mainController;
 
-import com.example.admin.AdminController;
-import com.example.mainController.inputAndOutput.InputsController;
-import com.example.mainController.inputAndOutput.OutPutsController;
+import com.example.admin.controller.AdminController;
+import com.example.nurse.service.NurseService;
+import com.example.owner.mainController.inputAndOutput.InputsController;
+import com.example.owner.mainController.inputAndOutput.OutPutsController;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -33,11 +34,13 @@ public class MainController {
     private final PatientController patientController;
     private final AdminController adminController;
 
+    private final NurseService nurseService;
+
     @Lazy
     public MainController(MyTelegramBot myTelegramBot, MainMenuController menuController,
                           InputsController inputsController, OutPutsController outPutsController,
                           ProfitController profitController, PatientCountController patientCountController,
-                          PatientController patientController, AdminController adminController) {
+                          PatientController patientController, AdminController adminController, NurseService nurseService) {
 
         this.myTelegramBot = myTelegramBot;
         this.menuController = menuController;
@@ -48,6 +51,7 @@ public class MainController {
 
         this.patientController = patientController;
         this.adminController = adminController;
+        this.nurseService = nurseService;
     }
 
 
@@ -107,6 +111,11 @@ public class MainController {
                         //bemorlar soni
                         menuController.countSick(message);
                         users.setStep(Step.COUNT);
+                        return;
+                    }
+
+                    case Constant.bemorlarRoyhati -> {
+                        nurseService.patientList(message);
                         return;
                     }
 

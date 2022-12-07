@@ -1,6 +1,6 @@
 package com.example.dto;
 
-import com.example.enums.PatientStatus;
+import com.example.enums.Status;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ public class PatientDTO {
 
     private String room;
 
-    private PatientStatus status;
+    private Status status;
 
     private LocalDate createdDate;
 }

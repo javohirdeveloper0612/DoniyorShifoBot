@@ -4,7 +4,7 @@ package com.example.admin.service;
 import com.example.entity.UsersEntity;
 import com.example.enums.Status;
 import com.example.enums.UserRole;
-import com.example.repository.UsersRepository;
+import com.example.owner.repository.UsersRepository;
 import com.example.step.Constant;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.Button;

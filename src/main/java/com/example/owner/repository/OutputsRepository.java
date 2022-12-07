@@ -1,4 +1,4 @@
-package com.example.repository;
+package com.example.owner.repository;
 
 import com.example.entity.InputEntity;
 import com.example.entity.OutputEntity;

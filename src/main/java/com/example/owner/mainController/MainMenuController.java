@@ -1,11 +1,9 @@
-package com.example.mainController;
+package com.example.owner.mainController;
 
 import com.example.step.Constant;
-
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.Button;
 import com.example.util.SendMsg;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -13,8 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class MainMenuController {
 
 
-    @Autowired
-    private MyTelegramBot myTelegramBot;
+    private final MyTelegramBot myTelegramBot;
+
+    public MainMenuController(MyTelegramBot myTelegramBot) {
+        this.myTelegramBot = myTelegramBot;
+    }
 
 
     public void mainMenu(Message message) {
@@ -23,8 +24,8 @@ public class MainMenuController {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Asosiy Menyuga Xush kelibsiz",
                 Button.markup(Button.rowList(Button.row(
-                        Button.button(Constant.kirim), Button.button(Constant.chiqim)
-                ),
+                                Button.button(Constant.kirim), Button.button(Constant.chiqim)
+                        ),
                         Button.row( Button.button(Constant.qoldiq)),
                         Button.row(
                         Button.button(Constant.bemorQidirish),
@@ -186,16 +187,6 @@ public class MainMenuController {
                                 Button.row(Button.button(Constant.backToMenu)))
                 )));
     }
-
-   /* public void addAdminMenu(Message message) {
-        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                "Admin qushish Menyusi",
-                Button.markup(Button.rowList(
-                        Button.row(Button.button(Constant.addAdmin),
-                                Button.button(Constant.removeAdmin)),
-                        Button.row(Button.button(Constant.backToMenu))
-                ))));
-    }*/
 
 
     public void searchPatient(Message message) {

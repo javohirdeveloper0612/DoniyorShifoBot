@@ -1,12 +1,11 @@
-package com.example.mainController;
+package com.example.owner.mainController;
 
-import com.example.service.PatientService;
+import com.example.owner.service.PatientService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -18,16 +17,19 @@ public class PatientCountController {
 
 
     private List<TelegramUsers> usersList = new ArrayList<>();
-    @Autowired
-    private MainMenuController mainMenuController;
+    private final MainMenuController mainMenuController;
 
-    @Autowired
-    private MainController mainController;
+    private final MainController mainController;
 
-    @Autowired
-    private PatientService patientService;
-    @Autowired
-    private MyTelegramBot myTelegramBot;
+    private final PatientService patientService;
+    private final MyTelegramBot myTelegramBot;
+
+    public PatientCountController(MainMenuController mainMenuController, MainController mainController, PatientService patientService, MyTelegramBot myTelegramBot) {
+        this.mainMenuController = mainMenuController;
+        this.mainController = mainController;
+        this.patientService = patientService;
+        this.myTelegramBot = myTelegramBot;
+    }
 
     public void handle(Message message) {
 

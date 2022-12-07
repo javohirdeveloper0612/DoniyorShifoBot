@@ -1,8 +1,8 @@
-package com.example.service;
+package com.example.owner.service;
 
 import com.example.dto.InputDTO;
 import com.example.entity.InputEntity;
-import com.example.repository.InputsRepository;
+import com.example.owner.repository.InputsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +14,11 @@ import java.util.Optional;
 @Service
 public class InputsService {
 
-    @Autowired
-    private InputsRepository repository;
+    private final InputsRepository repository;
+
+    public InputsService(InputsRepository repository) {
+        this.repository = repository;
+    }
 
 
     public InputDTO getInputCashByCreatedDate() {

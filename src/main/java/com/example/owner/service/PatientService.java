@@ -1,9 +1,8 @@
-package com.example.service;
+package com.example.owner.service;
 
 import com.example.dto.PatientDTO;
 import com.example.entity.PatientEntity;
-import com.example.repository.PatientRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.owner.repository.PatientRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,8 +11,11 @@ import java.util.List;
 @Service
 public class PatientService {
 
-    @Autowired
-    private PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
+
+    public PatientService(PatientRepository patientRepository) {
+        this.patientRepository = patientRepository;
+    }
 
     public List<PatientDTO> getPatientByFullName(String name) {
 
@@ -32,7 +34,7 @@ public class PatientService {
     }
 
     public Integer getCountFloor(String floorNumber) {
-        return patientRepository.countByFloor(floorNumber);
+        return patientRepository.countByFloorStartingWith(floorNumber);
     }
 
     public PatientDTO toDTO(PatientEntity entity) {

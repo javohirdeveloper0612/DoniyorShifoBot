@@ -1,11 +1,8 @@
-package com.example.service;
+package com.example.owner.service;
 
-import com.example.dto.InputDTO;
 import com.example.dto.OutputsDTO;
-import com.example.entity.InputEntity;
 import com.example.entity.OutputEntity;
-import com.example.repository.OutputsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.owner.repository.OutputsRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,8 +13,11 @@ import java.util.Optional;
 @Service
 public class OutputsService {
 
-    @Autowired
-    private OutputsRepository repository;
+    private final OutputsRepository repository;
+
+    public OutputsService(OutputsRepository repository) {
+        this.repository = repository;
+    }
 
     public OutputsDTO getInputCashByCreatedDate() {
 

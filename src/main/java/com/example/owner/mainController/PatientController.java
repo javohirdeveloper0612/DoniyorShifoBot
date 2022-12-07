@@ -1,7 +1,7 @@
-package com.example.mainController;
+package com.example.owner.mainController;
 
 import com.example.dto.PatientDTO;
-import com.example.service.PatientService;
+import com.example.owner.service.PatientService;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class PatientController {
 
         List<PatientDTO> dtoList = patientService.getPatientByFullName(message.getText());
 
-        if (dtoList.isEmpty()){
+        if (dtoList.isEmpty()) {
             myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                     "Bunday bemor mavjud emas ! ❌"));
         }
@@ -32,7 +32,8 @@ public class PatientController {
 
             for (PatientDTO dto : dtoList) {
                 myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
-                        "Ismi: " + dto.getFullName() + "\n\n" +
+                        "🆔 Id: " + dto.getId() + "\n\n" +
+                                "➡ Ismi: " + dto.getFullName() + "\n\n" +
                                 "\uD83D\uDED7 Qavati: " + dto.getFloor() + "\n\n" +
                                 "\uD83C\uDFD8 Xona raqami: " + dto.getRoom() + "\n\n" +
                                 "☎ Telefon raqami: " + dto.getPhone() + "\n\n" +
