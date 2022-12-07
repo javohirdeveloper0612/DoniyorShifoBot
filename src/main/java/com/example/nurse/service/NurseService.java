@@ -88,17 +88,16 @@ public class NurseService {
     }
     public boolean handlePatient(Message message) {
 
-        List<PatientEntity> entityList = patientRepository.getByFullNameIgnoreCase(message.getText());
+        List<PatientEntity> entityList = patientRepository.getByFullNameIgnoreCaseAndStatus(message.getText(),Status.ACTIVE);
 
         if (entityList.isEmpty()) {
             myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(), "Kechirasiz bemor topilmadi bemorlar " +
                     "*Ro'yxatini* qarab ko'ring  ❌"));
             return false;
+
         } else {
 
             List<NurseDTO> dtoList = new LinkedList<>();
-
-
             for (PatientEntity entity : entityList) {
                 NurseDTO nurseDTO = new NurseDTO();
                 nurseDTO.setId(entity.getId());
@@ -109,7 +108,6 @@ public class NurseService {
                 nurseDTO.setCreated_date(entity.getCreatedDate());
                 dtoList.add(nurseDTO);
             }
-
             for (NurseDTO dto : dtoList) {
                 myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                         "\uD83C\uDD94  ID : " + dto.getId() + "\n\n" +
@@ -239,5 +237,7 @@ public class NurseService {
             }
         }
     }
-
+    public void patientroyxati(Message message) {
+        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(),"*Bemorlar ro'yxati*   \uD83D\uDCCA"));
+    }
 }
