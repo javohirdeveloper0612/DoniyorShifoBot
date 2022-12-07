@@ -1,8 +1,6 @@
 package com.example.nurse.service;
-
 import com.example.dto.PatientDTO;
 import com.example.entity.PatientEntity;
-
 import com.example.enums.Status;
 import com.example.nurse.payload.NurseDTO;
 import com.example.repository.PatientRepository;
@@ -18,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
-
 import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
