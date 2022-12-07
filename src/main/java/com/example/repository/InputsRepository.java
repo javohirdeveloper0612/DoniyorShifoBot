@@ -11,4 +11,5 @@ public interface InputsRepository extends CrudRepository<InputEntity, Integer> {
     Optional<InputEntity> getByCreatedDate(LocalDate localDate);
 
 
+    Optional<InputEntity> findByCreatedDate(LocalDate now);
 }

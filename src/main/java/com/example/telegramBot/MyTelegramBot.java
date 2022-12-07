@@ -1,7 +1,7 @@
 package com.example.telegramBot;
 
 import com.example.config.BotConfig;
-import com.example.accountent.AccountentController;
+import com.example.accountent.controller.AccountentController;
 import com.example.admin.controller.AdminController;
 import com.example.mainController.MainController;
 import com.example.nurse.controller.NurseController;
@@ -63,11 +63,13 @@ public class MyTelegramBot extends TelegramLongPollingBot {
         }
 
         if (userId == 1030035146) {
-            adminController.handle(message);
+            accountentController.handle(message);
             return;
         }
 
-        boolean check = false;
+
+
+       /* boolean check = false;
         boolean password;
         if (message.getText().equals("/start")) {
             usersService.checkPasssword(message);
@@ -102,7 +104,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
                 usersService.sendErrorPassword(message);
             }
         }
-
+*/
     }
 
     public TelegramUsers saveUser(Long chatId) {
