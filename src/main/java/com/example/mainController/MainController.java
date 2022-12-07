@@ -38,6 +38,7 @@ public class MainController {
                           InputsController inputsController, OutPutsController outPutsController,
                           ProfitController profitController, PatientCountController patientCountController,
                           PatientController patientController, AdminController adminController) {
+
         this.myTelegramBot = myTelegramBot;
         this.menuController = menuController;
         this.inputsController = inputsController;
