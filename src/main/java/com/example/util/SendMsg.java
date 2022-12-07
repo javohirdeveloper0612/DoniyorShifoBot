@@ -53,25 +53,11 @@ public class SendMsg {
         sendMessage.setParseMode("Markdown");
         return sendMessage;
     }
-
-
-    public static SendDocument sendDoc(Long id, InputFile inputFile, ReplyKeyboardMarkup markup) {
-
-        SendDocument sendDocument = new SendDocument();
-        sendDocument.setChatId(id);
-        sendDocument.setDocument(inputFile);
-        sendDocument.setReplyMarkup(markup);
-        return sendDocument;
-    }
-
     public static SendDocument sendpatientDoc(Long id, InputFile inputFile) {
 
-
         SendDocument sendDocument = new SendDocument();
         sendDocument.setChatId(id);
         sendDocument.setDocument(inputFile);
-
         return sendDocument;
     }
-
 }

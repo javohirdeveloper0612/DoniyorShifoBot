@@ -2,24 +2,25 @@ package com.example.service;
 
 import com.example.dto.InputDTO;
 import com.example.entity.InputEntity;
-import com.example.entity.UsersEntity;
 import com.example.repository.InputsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class InputsService {
 
     @Autowired
-    private InputsRepository inputsRepository;
+    private InputsRepository repository;
 
 
     public InputDTO getInputCashByCreatedDate() {
 
-        Optional<InputEntity> optional = inputsRepository.getByCreatedDate(LocalDate.now());
+        Optional<InputEntity> optional = repository.getByCreatedDate(LocalDate.now());
 
         if (optional.isEmpty()) {
 
@@ -32,7 +33,7 @@ public class InputsService {
 
     public InputDTO getInputCardByCreatedDate() {
 
-        Optional<InputEntity> optional = inputsRepository.getByCreatedDate(LocalDate.now());
+        Optional<InputEntity> optional = repository.getByCreatedDate(LocalDate.now());
 
         if (optional.isEmpty()) {
 
@@ -45,7 +46,7 @@ public class InputsService {
 
 
     public InputDTO getInputByGivenDate(LocalDate localDate) {
-        Optional<InputEntity> optional = inputsRepository.getByCreatedDate(localDate);
+        Optional<InputEntity> optional = repository.getByCreatedDate(localDate);
 
         if (optional.isEmpty()) {
 
@@ -54,6 +55,27 @@ public class InputsService {
         InputEntity inputEntity = optional.get();
 
         return toDTO(inputEntity);
+    }
+
+    public List<InputDTO> getInputLast10(LocalDate date){
+
+        LocalDate before = date.minusDays(10);
+        
+
+       List<InputEntity> entities= repository.getByCreatedDateBetweenOrderByCreatedDateDesc(before,date);
+
+
+       List<InputDTO> dtoList = new ArrayList<>();
+
+      if (entities.isEmpty()){
+          return null;
+      }
+
+       entities.forEach(entity -> dtoList.add(toDTO(entity)));
+
+
+       return dtoList;
+
     }
 
 

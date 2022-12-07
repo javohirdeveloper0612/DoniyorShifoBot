@@ -47,4 +47,20 @@ public class UsersService {
                 "Parol xato ! Iltimos qaytadan urinib ko'ring !"));
     }
 
+    public boolean  isExsist(String phone){
+       return usersRepository.existsByPhone(phone);
+    }
+
+    public  boolean checkPhone(Message message) {
+        String text = message.getText();
+
+        if (text.startsWith("+998") && text.length() == 13) {
+            return true;
+        }
+
+    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+            "Telefon raqam notug'ri kiritildi iltimos qaytadan kiriting ! "));
+        return false;
+    }
+
 }

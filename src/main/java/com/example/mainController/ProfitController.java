@@ -1,9 +1,14 @@
 package com.example.mainController;
 
+import com.example.dto.InputDTO;
+import com.example.dto.ProfitDTO;
+import com.example.service.ProfitService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.telegramBot.MyTelegramBot;
+import com.example.util.SendMsg;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
@@ -14,14 +19,24 @@ import java.util.List;
 public class ProfitController {
 
 
-    @Autowired
-    private MainMenuController menuController;
+    private final MainMenuController menuController;
 
 
-    @Autowired
-    private MainController mainController;
+    private final MainController mainController;
 
+    private final ProfitService service;
+
+    private final MyTelegramBot myTelegramBot;
+
+    @Lazy
     private List<TelegramUsers> usersList = new ArrayList<>();
+
+    public ProfitController(MainMenuController menuController, MainController mainController, ProfitService service, MyTelegramBot myTelegramBot) {
+        this.menuController = menuController;
+        this.mainController = mainController;
+        this.service = service;
+        this.myTelegramBot = myTelegramBot;
+    }
 
 
     public void handle(Message message) {
@@ -30,6 +45,8 @@ public class ProfitController {
         TelegramUsers users = mainController.saveUser(message.getChatId());
 
         TelegramUsers residual = saveUser(message.getChatId());
+
+
 
 
         String text = message.getText();
@@ -74,6 +91,21 @@ public class ProfitController {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
+                    ProfitDTO dto = service.getTodayProfit();
+
+                    if (dto == null) {
+                        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                                "Bugun hisobidan kirimlar kiritilmagan ! ❌"));
+                        return;
+                    }
+
+
+                    myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                            "Sana: " + dto.getCreated_date() + "\n\n" +
+                                    "\uD83D\uDCB5 Bugungi umumiy kirimlar miqdori = " + dto.getSum() +
+                                    " so'm\n"
+                    ));
+
                 }
 
                 case Constant.kun10 -> {
@@ -96,6 +128,7 @@ public class ProfitController {
             switch (text) {
                 case Constant.bugungi -> {
                     // bugungilarni chiqramiz dataBaseda olinadi
+
                 }
 
                 case Constant.kun10 -> {

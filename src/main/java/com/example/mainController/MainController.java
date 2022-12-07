@@ -1,4 +1,6 @@
 package com.example.mainController;
+
+import com.example.admin.AdminController;
 import com.example.mainController.inputAndOutput.InputsController;
 import com.example.mainController.inputAndOutput.OutPutsController;
 import com.example.step.Constant;
@@ -6,10 +8,10 @@ import com.example.step.Step;
 import com.example.step.TelegramUsers;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,18 +30,23 @@ public class MainController {
 
     private final PatientCountController patientCountController;
 
-    private final AddAdminController addAdminController;
     private final PatientController patientController;
+    private final AdminController adminController;
 
-    public MainController(@Lazy MyTelegramBot myTelegramBot, @Lazy MainMenuController menuController, @Lazy InputsController inputsController, @Lazy OutPutsController outPutsController, @Lazy ProfitController profitController, @Lazy PatientCountController patientCountController, @Lazy AddAdminController addAdminController, @Lazy PatientController patientController) {
+    @Lazy
+    public MainController(MyTelegramBot myTelegramBot, MainMenuController menuController,
+                          InputsController inputsController, OutPutsController outPutsController,
+                          ProfitController profitController, PatientCountController patientCountController,
+                          PatientController patientController, AdminController adminController) {
         this.myTelegramBot = myTelegramBot;
         this.menuController = menuController;
         this.inputsController = inputsController;
         this.outPutsController = outPutsController;
         this.profitController = profitController;
         this.patientCountController = patientCountController;
-        this.addAdminController = addAdminController;
+
         this.patientController = patientController;
+        this.adminController = adminController;
     }
 
 
@@ -104,7 +111,8 @@ public class MainController {
 
                     case Constant.adminMenu -> {
                         //adminMenu
-                        menuController.addAdminMenu(message);
+//                        menuController.addAdminMenu(message);
+                        adminController.mainMenu(message);
                         users.setStep(Step.ADMIN);
 
                         return;
@@ -143,14 +151,14 @@ public class MainController {
             }
 
             if (users.getStep().equals(Step.ADMIN)) {
-                addAdminController.handle(message);
+                adminController.handle(message);
                 return;
             }
 
             if (users.getStep().equals(Step.SEARCHPATIENT)) {
                 patientController.handle(message);
                 users.setStep(Step.MAIN);
-                return;
+
             }
 
 
@@ -168,7 +176,6 @@ public class MainController {
                 return users;
             }
         }
-//        userController.getStep(chatId);
 
 
         TelegramUsers users = new TelegramUsers();

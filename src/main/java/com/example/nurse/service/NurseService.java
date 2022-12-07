@@ -1,23 +1,24 @@
 package com.example.nurse.service;
-
 import com.example.dto.PatientDTO;
 import com.example.entity.PatientEntity;
-
-import com.example.enums.Status;
+import com.example.enums.PatientStatus;
 import com.example.nurse.payload.NurseDTO;
 import com.example.repository.PatientRepository;
 import com.example.step.Constant;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.Button;
 import com.example.util.SendMsg;
+import com.google.common.collect.Table;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -38,7 +39,7 @@ public class NurseService {
         entity.setPhone(dto.getPhone());
         entity.setFloor(dto.getFloor());
         entity.setRoom(dto.getRoom());
-        entity.setStatus(Status.ACTIVE);
+        entity.setStatus(PatientStatus.ACTIVE);
         entity.setCreatedDate(LocalDate.now());
         patientRepository.save(entity);
 
@@ -150,7 +151,7 @@ public class NurseService {
         } else {
 
             PatientEntity entity = optional.get();
-            entity.setStatus(Status.BLOCK);
+            entity.setStatus(PatientStatus.BLOCK);
             patientRepository.save(entity);
             return true;
 
@@ -163,7 +164,7 @@ public class NurseService {
 
         boolean check = false;
 
-        Iterable<PatientEntity> patientlist = patientRepository.findAllByStatus(Status.ACTIVE);
+        Iterable<PatientEntity> patientlist = patientRepository.findAllByStatus(PatientStatus.ACTIVE);
 
         Map<Long, Object[]> patientData = new TreeMap<Long, Object[]>();
 

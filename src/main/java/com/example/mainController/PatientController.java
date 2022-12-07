@@ -23,6 +23,11 @@ public class PatientController {
 
         List<PatientDTO> dtoList = patientService.getPatientByFullName(message.getText());
 
+        if (dtoList.isEmpty()){
+            myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                    "Bunday bemor mavjud emas ! ❌"));
+        }
+
         if (dtoList != null) {
 
             for (PatientDTO dto : dtoList) {

@@ -1,6 +1,7 @@
 package com.example.mainController;
 
 import com.example.step.Constant;
+
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.Button;
 import com.example.util.SendMsg;
@@ -23,10 +24,13 @@ public class MainMenuController {
                 "Asosiy Menyuga Xush kelibsiz",
                 Button.markup(Button.rowList(Button.row(
                         Button.button(Constant.kirim), Button.button(Constant.chiqim)
-                ), Button.row(
-                        Button.button(Constant.qoldiq), Button.button(Constant.bemorQidirish)
-                ), Button.row(
-                        Button.button(Constant.bemorlarSoni), Button.button(Constant.adminMenu)
+                ),
+                        Button.row( Button.button(Constant.qoldiq)),
+                        Button.row(
+                        Button.button(Constant.bemorQidirish),
+                                Button.button(Constant.bemorlarSoni)
+                ), Button.row(Button.button(Constant.bemorlarRoyhati),
+                         Button.button(Constant.adminMenu)
                 )))));
     }
 
@@ -183,7 +187,7 @@ public class MainMenuController {
                 )));
     }
 
-    public void addAdminMenu(Message message) {
+   /* public void addAdminMenu(Message message) {
         myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
                 "Admin qushish Menyusi",
                 Button.markup(Button.rowList(
@@ -191,7 +195,7 @@ public class MainMenuController {
                                 Button.button(Constant.removeAdmin)),
                         Button.row(Button.button(Constant.backToMenu))
                 ))));
-    }
+    }*/
 
 
     public void searchPatient(Message message) {
