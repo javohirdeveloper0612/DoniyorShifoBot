@@ -4,7 +4,7 @@ import com.example.config.BotConfig;
 import com.example.accountent.AccountentController;
 import com.example.admin.controller.AdminController;
 import com.example.mainController.MainController;
-import com.example.nurse.NurseController;
+import com.example.nurse.controller.NurseController;
 import com.example.service.UsersService;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;

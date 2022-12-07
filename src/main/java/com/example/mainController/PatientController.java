@@ -1,7 +1,6 @@
 package com.example.mainController;
 
 import com.example.dto.PatientDTO;
-import com.example.entity.PatientEntity;
 import com.example.service.PatientService;
 import com.example.telegramBot.MyTelegramBot;
 import com.example.util.SendMsg;
@@ -21,6 +20,7 @@ public class PatientController {
 
 
     public void handle(Message message) {
+
         List<PatientDTO> dtoList = patientService.getPatientByFullName(message.getText());
 
         if (dtoList != null) {
