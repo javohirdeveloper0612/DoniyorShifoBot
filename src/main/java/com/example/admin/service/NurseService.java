@@ -1,6 +1,6 @@
 package com.example.admin.service;
 
-import com.example.admin.controller.AdminController;
+
 import com.example.entity.UsersEntity;
 import com.example.enums.Status;
 import com.example.repository.UsersRepository;

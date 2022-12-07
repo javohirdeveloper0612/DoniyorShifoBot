@@ -54,6 +54,7 @@ public class SendMsg {
         return sendMessage;
     }
 
+
     public static SendDocument sendDoc(Long id, InputFile inputFile, ReplyKeyboardMarkup markup) {
 
         SendDocument sendDocument = new SendDocument();
@@ -62,4 +63,15 @@ public class SendMsg {
         sendDocument.setReplyMarkup(markup);
         return sendDocument;
     }
+
+    public static SendDocument sendpatientDoc(Long id, InputFile inputFile) {
+
+
+        SendDocument sendDocument = new SendDocument();
+        sendDocument.setChatId(id);
+        sendDocument.setDocument(inputFile);
+
+        return sendDocument;
+    }
+
 }
