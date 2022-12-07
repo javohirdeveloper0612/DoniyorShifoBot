@@ -1,4 +1,6 @@
 package com.example.admin.service;
+
+
 import com.example.entity.UsersEntity;
 import com.example.enums.Status;
 import com.example.enums.UserRole;
@@ -14,6 +16,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.Message;
+
 import java.io.*;
 import java.util.Map;
 import java.util.Optional;
@@ -154,12 +157,15 @@ public class NurseServiceAdmin {
                         Cell cell = row.createCell(cellid++);
                         cell.setCellValue((String) obj);
                     }
+
                 }
+
                 try {
 
                     FileOutputStream out = new FileOutputStream("xamshiralar ro`yxati.xlsx");
                     workbook.write(out);
                     out.close();
+
 
                 } catch (IOException e) {
                     throw new RuntimeException(e);

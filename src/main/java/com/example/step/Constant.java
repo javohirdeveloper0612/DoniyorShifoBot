@@ -42,8 +42,8 @@ public interface Constant {
 
     String listNurse = "Hamshiralar ro'yxati \uD83D\uDCDA";
 
-    String addInput = "Kirimlarni kiritish \uD83C\uDFE6";
-    String addOutput = "Chiqimlarni kiritish \uD83C\uDFE6";
+    String addInput = "Kirimlarni kiritish";
+    String addOutput = "Chiqimlarni kiritish";
 
     String bemorQoshish = "Bemor Qoshish";
     String bemorOchirish = "Bemor O'chirish";

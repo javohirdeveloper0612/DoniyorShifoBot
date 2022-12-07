@@ -1,6 +1,5 @@
-package com.example.accountent.controller;
+package com.example.accountent;
 
-import com.example.accountent.service.AccountentService;
 import com.example.step.Constant;
 import com.example.step.Step;
 import com.example.step.TelegramUsers;
@@ -20,12 +19,6 @@ public class AccountentController {
     private MyTelegramBot myTelegramBot;
     List<TelegramUsers> usersList = new ArrayList<>();
 
-    private final AccountentService accountentService;
-
-    public AccountentController(AccountentService accountentService) {
-        this.accountentService = accountentService;
-    }
-
     public void handle(Message message) {
         String text = message.getText();
 
@@ -33,24 +26,23 @@ public class AccountentController {
 
         if (text.equals("/start") || users.getStep() == null) {
             mainMenu(message);
+
             users.setStep(Step.MAIN);
         }
-
         if (users.getStep().equals(Step.MAIN)) {
 
             switch (text) {
                 case Constant.addInput -> {
                     //shu yerda kirimlar menusi
-                    accountentService.addInputMenu(message);
+                    addInputMenu(message);
                     users.setStep(Step.INPUTS);
                     return;
                 }
 
                 case Constant.addOutput -> {
                     //chiqimlar menusi
-                    accountentService.addOutputMenu(message);
+                    addOutputMenu(message);
                     users.setStep(Step.OUTPUTS);
-                    return;
                 }
 
             }
@@ -63,92 +55,82 @@ public class AccountentController {
 
             switch (text) {
                 case Constant.naxd -> {
-                    accountentService.addKirimNaxd(message);
+                    addKirimNaxd(message);
                     users.setStep(Step.NAXDIN);
-                    return;
                 }
                 case Constant.plastik -> {
-                    accountentService.addKidrimPlastik(message);
+                    addKidrimPlastik(message);
                     users.setStep(Step.PLASTIKIN);
-                    return;
                 }
 
-                case Constant.backToMenu -> {
-                    mainMenu(message);
-                    users.setStep(Step.MAIN);
-                    return;
-
-                }
-
-
             }
-
-
+            return;
         }
-
-        if (users.getStep().equals(Step.NAXDIN)) {
-            boolean saveCash = accountentService.saveCash(message);
-            if (saveCash) {
-                users.setStep(Step.INPUTS);
-                return;
-            }
-
-        }
-
-        if (users.getStep().equals(Step.PLASTIKIN)) {
-            boolean saveCard = accountentService.saveCard(message);
-            if (saveCard) {
-                users.setStep(Step.INPUTS);
-            }
-        }
-
-
         if (users.getStep().equals(Step.OUTPUTS)) {
 
             switch (text) {
                 case Constant.naxd -> {
-                    accountentService.addChiqimNaxd(message);
-                    users.setStep(Step.NAQDOUTPUTIN);
-                    return;
+                    addChiqimNaxd(message);
+                    users.setStep(Step.NAXDIN);
                 }
                 case Constant.plastik -> {
-                    accountentService.addChiqimPlastik(message);
-                    users.setStep(Step.PLASTIKOUTPUTIN);
-                    return;
-                }
-                case Constant.backToMenu -> {
-                    mainMenu(message);
-                    users.setStep(Step.MAIN);
-
+                    addChiqimPlastik(message);
+                    users.setStep(Step.PLASTIKIN);
                 }
 
             }
+            return;
+
         }
+    }
 
-        if (users.getStep().equals(Step.NAQDOUTPUTIN)) {
-            boolean output = accountentService.saveCashOutput(message);
-            if (output) {
-                users.setStep(Step.OUTPUTS);
-                return;
-            }
-        }
+    private void addChiqimPlastik(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Kirimlarning naxd qismini kiriting :"));
+    }
 
+    private void addChiqimNaxd(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Chiqimlarning naxd qismini kiriting :"));
+    }
 
-        if (users.getStep().equals(Step.PLASTIKOUTPUTIN)) {
-            boolean output = accountentService.saveCardOutput(message);
-            if (output) {
-                users.setStep(Step.OUTPUTS);
+    private void addKidrimPlastik(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Chiqimlarning naxd qismini kiriting :"));
+    }
 
-            }
-        }
+    private void addKirimNaxd(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Kirimlarning naxd qismini kiriting :"));
+    }
 
+    public void addInputMenu(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Kiririmlarni kiritish ",
+                Button.markup(Button.rowList(Button.row(
+                                Button.button(Constant.naxd),
+                                Button.button(Constant.plastik)),
+                        Button.row(
+                                Button.button(Constant.backToMenu)
+                        )))));
 
     }
 
+    public void addOutputMenu(Message message) {
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Chiqimlarni kiritish  ",
+                Button.markup(Button.rowList(Button.row(
+                                Button.button(Constant.naxd),
+                                Button.button(Constant.plastik)),
+                        Button.row(
+                                Button.button(Constant.backToMenu)
+                        )))));
+
+    }
 
     public void mainMenu(Message message) {
-        myTelegramBot.send(SendMsg.sendMsgParse(message.getChatId(),
-                "*Kirim-Chiqimlar paneliga xush kelibsiz*",
+        myTelegramBot.send(SendMsg.sendMsg(message.getChatId(),
+                "Kirim-Chiqimlar paneliga xush kelibsiz",
                 Button.markup(Button.rowList(Button.row(
                         Button.button(Constant.addInput),
                         Button.button(Constant.addOutput)

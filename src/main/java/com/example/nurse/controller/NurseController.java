@@ -55,16 +55,17 @@ public class NurseController {
                 }
 
                 case Constant.bemorlarRoyhati -> {
-                    nurseService.patientroyxati(message);
                     nurseService.patientList(message);
-                    nurseService.nurseMenuButton2(message);
                     step.setStep(Step.START);
                     return;
+
                 }
+
             }
+
         }
 
-        //***************************** PATIENT REGISTRATION **************************************
+        //***************************** BEMOR REGISTRATSIYA **************************************
 
 
         switch (step.getStep()) {
@@ -138,6 +139,7 @@ public class NurseController {
         TelegramUsers users = new TelegramUsers();
         users.setChatId(chatId);
         usersList.add(users);
+
         return users;
     }
 

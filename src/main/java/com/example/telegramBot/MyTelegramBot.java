@@ -1,9 +1,9 @@
 package com.example.telegramBot;
 
-import com.example.config.BotConfig;
-import com.example.accountent.controller.AccountentController;
 import com.example.admin.controller.AdminController;
-import com.example.mainController.MainController;
+import com.example.config.BotConfig;
+import com.example.accountent.AccountentController;
+import com.example.owner.mainController.MainController;
 import com.example.nurse.controller.NurseController;
 import com.example.service.UsersService;
 import com.example.step.Step;
@@ -36,7 +36,10 @@ public class MyTelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig botConfig;
 
-    public MyTelegramBot(@Lazy BotConfig botConfig, @Lazy MainController mainController, @Lazy AdminController adminController, @Lazy NurseController nurseController, @Lazy AccountentController accountentController, @Lazy UsersService usersService) {
+    @Lazy
+    public MyTelegramBot(BotConfig botConfig, MainController mainController,
+                         AdminController adminController, NurseController nurseController,
+                         AccountentController accountentController, UsersService usersService) {
         this.botConfig = botConfig;
         this.mainController = mainController;
         this.adminController = adminController;
@@ -63,13 +66,11 @@ public class MyTelegramBot extends TelegramLongPollingBot {
         }
 
         if (userId == 1030035146) {
-            accountentController.handle(message);
+            adminController.handle(message);
             return;
         }
 
-
-
-       /* boolean check = false;
+        boolean check = false;
         boolean password;
         if (message.getText().equals("/start")) {
             usersService.checkPasssword(message);
@@ -104,7 +105,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
                 usersService.sendErrorPassword(message);
             }
         }
-*/
+
     }
 
     public TelegramUsers saveUser(Long chatId) {
@@ -139,6 +140,7 @@ public class MyTelegramBot extends TelegramLongPollingBot {
             throw new RuntimeException(e);
         }
     }
+
 
     public void send(SendVideo sendVideo) {
         try {
